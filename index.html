@@ -727,67 +727,90 @@
                 this.SESSION_KEY = 'whatsapp_session';
                 
                 this.loadData();
-                // Les comptes de test sont supprimés - uniquement de vrais utilisateurs
                 this.render();
                 this.checkSession();
                 
-                // Synchronisation en temps réel toutes les 3 secondes
+                // Synchronisation en temps réel toutes les 2 secondes
                 setInterval(() => {
                     if (this.currentUser) {
-                        this.syncData();
+                        this.syncFromCloud();
                     }
-                }, 3000);
+                }, 2000);
             }
 
-            loadData() {
-                const data = localStorage.getItem(this.STORAGE_KEY);
-                if (data) {
-                    const parsed = JSON.parse(data);
-                    parsed.users?.forEach(u => this.users.set(u.id, u));
-                    parsed.chats?.forEach(c => this.chats.set(c.id, c));
-                    Object.entries(parsed.messages || {}).forEach(([k, v]) => this.messages.set(k, v));
+            async loadData() {
+                try {
+                    // Charger depuis le stockage partagé
+                    const result = await window.storage.get('whatsapp_global_data', true);
+                    if (result && result.value) {
+                        const data = JSON.parse(result.value);
+                        data.users?.forEach(u => this.users.set(u.id, u));
+                        data.chats?.forEach(c => this.chats.set(c.id, c));
+                        Object.entries(data.messages || {}).forEach(([k, v]) => this.messages.set(k, v));
+                    }
+                } catch (error) {
+                    console.log('Première utilisation - base de données vide');
+                }
+                
+                // Charger aussi depuis localStorage comme backup
+                const localData = localStorage.getItem(this.SESSION_KEY);
+                if (localData) {
+                    const { userId } = JSON.parse(localData);
+                    // Recharger l'utilisateur depuis le cloud
+                    await this.syncFromCloud();
                 }
             }
 
-            saveData() {
+            async saveData() {
                 const data = {
                     users: Array.from(this.users.values()),
                     chats: Array.from(this.chats.values()),
                     messages: Object.fromEntries(this.messages),
                     lastUpdate: Date.now()
                 };
-                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+                
+                try {
+                    // Sauvegarder dans le stockage partagé (visible par tous)
+                    await window.storage.set('whatsapp_global_data', JSON.stringify(data), true);
+                    console.log('✅ Données synchronisées');
+                } catch (error) {
+                    console.error('❌ Erreur de synchronisation:', error);
+                }
+            }
+
+            async syncFromCloud() {
+                try {
+                    const result = await window.storage.get('whatsapp_global_data', true);
+                    if (result && result.value) {
+                        const data = JSON.parse(result.value);
+                        
+                        // Mettre à jour les utilisateurs
+                        data.users?.forEach(u => this.users.set(u.id, u));
+                        
+                        // Mettre à jour les chats
+                        data.chats?.forEach(c => this.chats.set(c.id, c));
+                        
+                        // Mettre à jour les messages
+                        Object.entries(data.messages || {}).forEach(([k, v]) => {
+                            this.messages.set(k, v);
+                        });
+                        
+                        // Rafraîchir l'affichage si nécessaire
+                        if (this.currentChat) {
+                            this.loadMessages();
+                        }
+                        if (document.getElementById('chatsList')) {
+                            this.loadChats();
+                        }
+                    }
+                } catch (error) {
+                    console.log('Synchronisation en attente...');
+                }
             }
 
             syncData() {
-                // Recharger les données pour voir les nouveaux messages
-                const data = localStorage.getItem(this.STORAGE_KEY);
-                if (data) {
-                    const parsed = JSON.parse(data);
-                    
-                    // Mettre à jour les utilisateurs
-                    parsed.users?.forEach(u => {
-                        if (!this.users.has(u.id)) {
-                            this.users.set(u.id, u);
-                        }
-                    });
-                    
-                    // Mettre à jour les chats
-                    parsed.chats?.forEach(c => {
-                        this.chats.set(c.id, c);
-                    });
-                    
-                    // Mettre à jour les messages
-                    Object.entries(parsed.messages || {}).forEach(([k, v]) => {
-                        this.messages.set(k, v);
-                    });
-                    
-                    // Rafraîchir l'affichage
-                    if (this.currentChat) {
-                        this.loadMessages();
-                    }
-                    this.loadChats();
-                }
+                // Cette fonction est maintenant gérée par syncFromCloud
+                this.syncFromCloud();
             }
 
             createTestUsers() {
@@ -798,13 +821,16 @@
                 const session = localStorage.getItem(this.SESSION_KEY);
                 if (session) {
                     const { userId } = JSON.parse(session);
-                    const user = this.users.get(userId);
-                    if (user) {
-                        this.currentUser = user;
-                        this.showApp();
-                    } else {
-                        this.showHomePage();
-                    }
+                    // Attendre que les données soient chargées
+                    setTimeout(() => {
+                        const user = this.users.get(userId);
+                        if (user) {
+                            this.currentUser = user;
+                            this.showApp();
+                        } else {
+                            this.showHomePage();
+                        }
+                    }, 500);
                 } else {
                     this.showHomePage();
                 }
@@ -1153,14 +1179,14 @@
                 this.currentChat.lastMessage = text;
                 this.currentChat.lastMessageAt = message.timestamp;
                 
+                // Sauvegarder immédiatement dans le cloud
                 this.saveData();
                 this.loadMessages();
                 this.loadChats();
                 
                 input.value = '';
                 
-                // Auto-réponse désactivée - vous pouvez la réactiver en décommentant la ligne ci-dessous
-                // setTimeout(() => this.autoReply(), 2000);
+                console.log('💬 Message envoyé et synchronisé');
             }
 
             autoReply() {
@@ -1276,21 +1302,29 @@
                 }
             }
 
-            resetApp() {
-                if (confirm('⚠️ ATTENTION : Ceci va supprimer TOUS les comptes, conversations et messages.\n\nÊtes-vous sûr de vouloir réinitialiser l\'application ?')) {
-                    // Supprimer toutes les données
-                    localStorage.removeItem(this.STORAGE_KEY);
-                    localStorage.removeItem(this.SESSION_KEY);
-                    
-                    // Réinitialiser l'application
-                    this.users = new Map();
-                    this.chats = new Map();
-                    this.messages = new Map();
-                    this.currentUser = null;
-                    this.currentChat = null;
-                    
-                    alert('✅ Application réinitialisée ! Vous pouvez maintenant créer de vrais comptes.');
-                    location.reload();
+            async resetApp() {
+                if (confirm('⚠️ ATTENTION : Ceci va supprimer TOUS les comptes, conversations et messages de TOUS les utilisateurs.\n\nÊtes-vous sûr de vouloir réinitialiser l\'application ?')) {
+                    try {
+                        // Supprimer du stockage partagé
+                        await window.storage.delete('whatsapp_global_data', true);
+                        
+                        // Supprimer du localStorage
+                        localStorage.removeItem(this.STORAGE_KEY);
+                        localStorage.removeItem(this.SESSION_KEY);
+                        
+                        // Réinitialiser l'application
+                        this.users = new Map();
+                        this.chats = new Map();
+                        this.messages = new Map();
+                        this.currentUser = null;
+                        this.currentChat = null;
+                        
+                        alert('✅ Application réinitialisée ! Base de données vide, prête pour de vrais utilisateurs.');
+                        location.reload();
+                    } catch (error) {
+                        console.error('Erreur de réinitialisation:', error);
+                        alert('❌ Erreur lors de la réinitialisation');
+                    }
                 }
             }
 
@@ -1326,10 +1360,17 @@
         let app;
         document.addEventListener('DOMContentLoaded', () => {
             app = new WhatsAppApp();
-            console.log('WhatsApp Web - Application de messagerie réelle');
-            console.log('✅ Créez votre compte pour commencer');
-            console.log('✅ Invitez vos amis à créer leurs comptes');
-            console.log('✅ Chattez en temps réel avec synchronisation automatique');
+            console.log('🚀 WhatsApp Web - Messagerie en temps réel');
+            console.log('✅ Stockage partagé activé');
+            console.log('✅ Synchronisation automatique toutes les 2 secondes');
+            console.log('✅ Les messages sont visibles par tous les utilisateurs');
+            console.log('');
+            console.log('📝 Instructions:');
+            console.log('1. Cliquez sur "Réinitialiser l\'app" pour supprimer les comptes de test');
+            console.log('2. Créez votre compte personnel');
+            console.log('3. Ouvrez l\'app dans un autre onglet/navigateur');
+            console.log('4. Créez un autre compte');
+            console.log('5. Chattez en temps réel !');
         });
     </script>
 </body>
