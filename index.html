@@ -226,17 +226,18 @@
             transform: translateY(0);
         }
 
-        .invite-section {
+        .demo-section {
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid var(--border-color);
+            text-align: center;
         }
 
-        .invite-button {
+        .demo-button {
             width: 100%;
             background: var(--primary-dark);
             color: var(--text-primary);
-            border: 2px solid var(--border-color);
+            border: 2px solid var(--accent-blue);
             padding: 14px;
             border-radius: 10px;
             font-size: 16px;
@@ -249,9 +250,9 @@
             gap: 10px;
         }
 
-        .invite-button:hover {
-            border-color: var(--green-whatsapp);
-            background: var(--chat-dark);
+        .demo-button:hover {
+            background: var(--accent-blue);
+            color: white;
         }
 
         .form-error {
@@ -277,6 +278,7 @@
             border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s ease;
         }
 
         .sidebar-header {
@@ -285,6 +287,7 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .current-user {
@@ -423,6 +426,9 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .empty-state-button:hover {
@@ -436,6 +442,7 @@
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .chat-item:hover {
@@ -444,6 +451,16 @@
 
         .chat-item.active {
             background-color: var(--chat-dark);
+        }
+
+        .chat-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--green-whatsapp);
         }
 
         .chat-avatar {
@@ -457,6 +474,7 @@
             font-size: 22px;
             color: white;
             background-color: var(--accent-blue);
+            flex-shrink: 0;
         }
 
         .chat-info {
@@ -465,6 +483,7 @@
             flex-direction: column;
             justify-content: center;
             gap: 6px;
+            min-width: 0;
         }
 
         .chat-header {
@@ -476,11 +495,15 @@
         .chat-name {
             font-weight: 600;
             font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-time {
             font-size: 13px;
             color: var(--text-secondary);
+            white-space: nowrap;
         }
 
         .chat-preview {
@@ -510,6 +533,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         /* Chat Window */
@@ -518,6 +542,7 @@
             display: flex;
             flex-direction: column;
             background-color: var(--chat-dark);
+            background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='smallGrid' width='40' height='40' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 40 0 L 0 0 0 40' fill='none' stroke='rgba(42,57,66,0.1)' stroke-width='0.5'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23smallGrid)'/%3E%3C/svg%3E");
         }
 
         .chat-header {
@@ -529,25 +554,68 @@
             border-bottom: 1px solid var(--border-color);
         }
 
+        .back-button {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
         .chat-contact {
             flex: 1;
             display: flex;
             align-items: center;
             gap: 20px;
+            min-width: 0;
         }
 
         .chat-contact-info {
             flex: 1;
+            min-width: 0;
         }
 
         .chat-contact-name {
             font-weight: 600;
             font-size: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .chat-status {
             font-size: 14px;
             color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 20px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .chat-action {
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .chat-action:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
         .message-input-container {
@@ -561,16 +629,17 @@
 
         .input-actions {
             display: flex;
-            gap: 25px;
+            gap: 20px;
             color: var(--text-secondary);
             align-items: center;
+            flex-shrink: 0;
         }
 
         .input-action {
-            font-size: 26px;
+            font-size: 24px;
             cursor: pointer;
             transition: all 0.3s ease;
-            padding: 10px;
+            padding: 8px;
             border-radius: 50%;
         }
 
@@ -582,6 +651,7 @@
         .message-input-wrapper {
             flex: 1;
             position: relative;
+            min-width: 0;
         }
 
         .message-input {
@@ -637,17 +707,31 @@
 
         .messages-container {
             flex: 1;
-            padding: 30px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
+        }
+
+        .message-date {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .date-label {
+            background-color: rgba(34, 46, 53, 0.8);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: inline-block;
         }
 
         .message {
             display: flex;
             flex-direction: column;
-            max-width: 75%;
+            max-width: 85%;
             margin-bottom: 5px;
             animation: messageAppear 0.3s ease;
         }
@@ -672,13 +756,13 @@
         }
 
         .message-bubble {
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-radius: 12px;
             position: relative;
             word-wrap: break-word;
             line-height: 1.6;
-            font-size: 16px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 15px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .message.sent .message-bubble {
@@ -695,12 +779,12 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 8px;
-            margin-top: 6px;
+            gap: 6px;
+            margin-top: 4px;
         }
 
         .message-time {
-            font-size: 12px;
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.7);
             white-space: nowrap;
         }
@@ -712,13 +796,13 @@
             justify-content: center;
             height: 100%;
             text-align: center;
-            padding: 40px;
+            padding: 20px;
         }
 
         .welcome-content {
             max-width: 500px;
             background-color: rgba(34, 46, 53, 0.8);
-            padding: 30px;
+            padding: 25px;
             border-radius: 16px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -727,16 +811,27 @@
         .welcome-content h3 {
             color: var(--green-whatsapp);
             margin-bottom: 15px;
-            font-size: 24px;
+            font-size: 22px;
         }
 
         .welcome-content p {
             color: var(--text-secondary);
             line-height: 1.6;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        /* Modal Invitation */
+        .welcome-content ol {
+            text-align: left;
+            margin: 15px 0;
+            padding-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .welcome-content li {
+            margin-bottom: 8px;
+        }
+
+        /* Modal Nouveau Chat */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -749,14 +844,17 @@
             align-items: center;
             z-index: 2000;
             backdrop-filter: blur(10px);
+            padding: 20px;
         }
 
         .modal-content {
             background-color: var(--secondary-dark);
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
-            width: 90%;
+            width: 100%;
             max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -765,22 +863,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .modal-title {
             color: var(--green-whatsapp);
-            font-size: 28px;
+            font-size: 24px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .modal-close {
             background: none;
             border: none;
             color: var(--text-secondary);
-            font-size: 24px;
+            font-size: 22px;
             cursor: pointer;
             padding: 8px;
             border-radius: 50%;
@@ -792,87 +890,84 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-        .invite-link-container {
-            background: var(--chat-dark);
-            border-radius: 12px;
-            padding: 20px;
+        .modal-search {
             margin-bottom: 20px;
+            position: relative;
         }
 
-        .invite-link {
-            display: flex;
-            gap: 10px;
-        }
-
-        .invite-link input {
-            flex: 1;
-            padding: 12px;
-            background: var(--primary-dark);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        .copy-button {
-            background: var(--green-whatsapp);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .copy-button:hover {
-            background: #00c094;
-        }
-
-        .qr-code {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .qr-placeholder {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(45deg, var(--primary-dark) 25%, var(--secondary-dark) 25%, var(--secondary-dark) 50%, var(--primary-dark) 50%, var(--primary-dark) 75%, var(--secondary-dark) 75%);
-            background-size: 20px 20px;
-            margin: 0 auto;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .modal-search i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             color: var(--text-secondary);
         }
 
-        .share-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
+        .modal-search input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            background: var(--chat-dark);
+            border: none;
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 15px;
         }
 
-        .share-option {
-            background: var(--chat-dark);
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
+        .modal-search input:focus {
+            outline: none;
+        }
+
+        .modal-users {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
             padding: 15px;
-            text-align: center;
+            gap: 15px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-bottom: 8px;
         }
 
-        .share-option:hover {
-            border-color: var(--green-whatsapp);
-            transform: translateY(-2px);
+        .user-item:hover {
+            background-color: var(--chat-dark);
         }
 
-        .share-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: var(--green-whatsapp);
+        .user-item-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 18px;
+            color: white;
+            background-color: var(--accent-blue);
+            flex-shrink: 0;
+        }
+
+        .user-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-item-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-item-status {
+            font-size: 13px;
+            color: var(--text-secondary);
         }
 
         /* Loader */
@@ -914,16 +1009,19 @@
         /* Notification */
         .notification {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px;
+            right: 20px;
             background: linear-gradient(135deg, var(--message-sent) 0%, #006e56 100%);
             color: white;
-            padding: 20px 25px;
-            border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             z-index: 1500;
             animation: slideInRight 0.5s ease;
-            max-width: 400px;
+            max-width: 350px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         @keyframes slideInRight {
@@ -931,9 +1029,23 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
+        .notification-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-message {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 8px;
         }
 
         ::-webkit-scrollbar-track {
@@ -942,7 +1054,7 @@
 
         ::-webkit-scrollbar-thumb {
             background: var(--border-color);
-            border-radius: 5px;
+            border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
@@ -950,13 +1062,15 @@
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .home-page {
                 flex-direction: column;
+                overflow-y: auto;
             }
             
             .welcome-panel {
-                padding: 30px;
+                padding: 30px 20px;
+                min-height: auto;
             }
             
             .auth-panel {
@@ -970,9 +1084,25 @@
             }
         }
 
+        @media (max-width: 992px) {
+            .features {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+            
+            .sidebar {
+                width: 320px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+        }
+
         @media (max-width: 768px) {
             .home-page {
-                overflow-y: auto;
+                height: auto;
+                min-height: 100vh;
             }
             
             .welcome-title {
@@ -983,16 +1113,18 @@
                 font-size: 60px;
             }
             
-            .features {
-                grid-template-columns: 1fr;
+            .auth-panel {
+                padding: 30px 20px;
             }
             
+            /* Application mobile */
             .sidebar {
                 width: 100%;
                 position: fixed;
                 top: 0;
                 left: 0;
                 z-index: 100;
+                transform: translateX(0);
             }
             
             .sidebar.hidden {
@@ -1013,34 +1145,135 @@
                 z-index: 200;
             }
             
-            .mobile-back {
+            .back-button {
                 display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 10px;
-                margin-right: 10px;
             }
-        }
-
-        @media (max-width: 480px) {
-            .auth-panel {
-                padding: 25px 20px;
+            
+            .message {
+                max-width: 95%;
+            }
+            
+            .chat-contact-name {
+                font-size: 18px;
             }
             
             .modal-content {
-                padding: 25px 20px;
-                margin: 15px;
-            }
-            
-            .welcome-title {
-                font-size: 28px;
+                padding: 20px;
+                margin: 0;
             }
             
             .notification {
                 left: 15px;
                 right: 15px;
                 max-width: none;
+                bottom: 15px;
             }
+        }
+
+        @media (max-width: 576px) {
+            .welcome-title {
+                font-size: 28px;
+            }
+            
+            .welcome-subtitle {
+                font-size: 16px;
+                padding: 0 10px;
+            }
+            
+            .feature {
+                padding: 15px;
+            }
+            
+            .auth-title {
+                font-size: 24px;
+            }
+            
+            .sidebar-header {
+                padding: 15px;
+            }
+            
+            .chat-header {
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .message-input-container {
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .messages-container {
+                padding: 15px;
+            }
+            
+            .modal-content {
+                padding: 15px;
+            }
+            
+            .user-item {
+                padding: 12px;
+            }
+            
+            .user-item-avatar {
+                width: 45px;
+                height: 45px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .welcome-title {
+                font-size: 24px;
+            }
+            
+            .logo {
+                font-size: 50px;
+            }
+            
+            .sidebar-actions {
+                gap: 10px;
+            }
+            
+            .sidebar-action {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .chat-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .chat-item {
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .message-input {
+                padding: 14px 18px;
+                font-size: 15px;
+            }
+            
+            .send-button {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .input-actions {
+                gap: 15px;
+            }
+            
+            .input-action {
+                font-size: 22px;
+            }
+        }
+
+        /* Animation d'entrée */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -1053,8 +1286,8 @@
             </div>
             <h1 class="welcome-title">WhatsApp Web Réel</h1>
             <p class="welcome-subtitle">
-                Une application de messagerie instantanée fonctionnelle où vous pouvez créer votre propre compte et inviter vos amis à vous rejoindre.
-                Tous les messages sont stockés localement dans votre navigateur.
+                Une application de messagerie instantanée complète et fonctionnelle.
+                Créez votre compte et discutez avec vos amis en temps réel.
             </p>
             
             <div class="features">
@@ -1062,22 +1295,22 @@
                     <div class="feature-icon">
                         <i class="fas fa-user-plus"></i>
                     </div>
-                    <div class="feature-title">Compte personnel</div>
+                    <div class="feature-title">Comptes réels</div>
                     <div class="feature-desc">Créez votre propre compte avec email et mot de passe</div>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">
-                        <i class="fas fa-share-alt"></i>
-                    </div>
-                    <div class="feature-title">Invitez vos amis</div>
-                    <div class="feature-desc">Générez un lien d'invitation pour inviter d'autres personnes</div>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">
                         <i class="fas fa-comments"></i>
                     </div>
                     <div class="feature-title">Chat en temps réel</div>
-                    <div class="feature-desc">Discutez avec les personnes que vous avez invitées</div>
+                    <div class="feature-desc">Discutez instantanément avec vos contacts</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-title">Responsive design</div>
+                    <div class="feature-desc">Fonctionne sur mobile, tablette et desktop</div>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">
@@ -1140,10 +1373,13 @@
                 </button>
             </form>
             
-            <div class="invite-section">
-                <button class="invite-button" id="inviteFriendBtn">
-                    <i class="fas fa-user-plus"></i> Inviter un ami à créer un compte
+            <div class="demo-section">
+                <button class="demo-button" id="demoButton">
+                    <i class="fas fa-play-circle"></i> Essayer la démo
                 </button>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 10px;">
+                    Testez l'application avec un compte démo préconfiguré
+                </p>
             </div>
         </div>
     </div>
@@ -1172,9 +1408,6 @@
                     <div class="sidebar-action" id="newChatBtn" title="Nouvelle discussion">
                         <i class="fas fa-comment-medical"></i>
                     </div>
-                    <div class="sidebar-action" id="inviteBtn" title="Inviter un ami">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
                     <div class="sidebar-action" id="logoutBtn" title="Déconnexion">
                         <i class="fas fa-sign-out-alt"></i>
                     </div>
@@ -1196,10 +1429,10 @@
                     </div>
                     <div class="empty-state-title">Aucune conversation</div>
                     <div class="empty-state-desc">
-                        Invitez d'abord un ami à créer un compte, puis commencez une nouvelle discussion avec lui.
+                        Commencez une nouvelle discussion en cliquant sur l'icône <i class="fas fa-comment-medical"></i>
                     </div>
-                    <button class="empty-state-button" id="inviteFromEmptyBtn">
-                        <i class="fas fa-user-plus"></i> Inviter un ami
+                    <button class="empty-state-button" id="startNewChatBtn">
+                        <i class="fas fa-comment-medical"></i> Nouvelle discussion
                     </button>
                 </div>
             </div>
@@ -1208,7 +1441,7 @@
         <!-- Fenêtre de chat -->
         <div class="chat-window" id="chatWindow">
             <div class="chat-header">
-                <div class="mobile-back" id="backButton" style="display: none;">
+                <div class="back-button" id="backButton">
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="chat-contact">
@@ -1220,8 +1453,16 @@
                             WhatsApp Web
                         </div>
                         <div class="chat-status" id="chatStatus">
-                            Connectez-vous avec vos amis
+                            Sélectionnez une conversation
                         </div>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <div class="chat-action" title="Rechercher">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="chat-action" title="Plus d'options">
+                        <i class="fas fa-ellipsis-v"></i>
                     </div>
                 </div>
             </div>
@@ -1232,14 +1473,14 @@
                     <div class="welcome-content">
                         <h3><i class="fab fa-whatsapp"></i> WhatsApp Web Réel</h3>
                         <p>
-                            Cette application fonctionne avec des comptes réels. Pour commencer à chatter :
+                            Bienvenue dans votre application WhatsApp Web ! Pour commencer :
                         </p>
-                        <ol style="text-align: left; margin: 20px 0; padding-left: 20px; color: var(--text-secondary);">
-                            <li>Invitez un ami à créer un compte en cliquant sur <i class="fas fa-user-plus"></i></li>
-                            <li>Demandez-lui de s'inscrire avec le lien d'invitation</li>
-                            <li>Commencez une nouvelle discussion avec lui</li>
+                        <ol>
+                            <li>Créez un nouveau compte ou connectez-vous</li>
+                            <li>Démarrez une nouvelle discussion</li>
+                            <li>Commencez à chatter avec vos contacts</li>
                         </ol>
-                        <p style="color: var(--accent-blue);">
+                        <p style="color: var(--accent-blue); margin-top: 15px;">
                             <i class="fas fa-info-circle"></i> Tous les messages sont stockés localement sur votre appareil.
                         </p>
                     </div>
@@ -1250,6 +1491,9 @@
                 <div class="input-actions">
                     <div class="input-action" title="Émojis">
                         <i class="far fa-smile"></i>
+                    </div>
+                    <div class="input-action" title="Joindre un fichier">
+                        <i class="fas fa-paperclip"></i>
                     </div>
                 </div>
                 
@@ -1267,70 +1511,6 @@
         </div>
     </div>
 
-    <!-- Modal Invitation -->
-    <div id="inviteModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">
-                    <i class="fas fa-user-plus"></i> Inviter un ami
-                </h2>
-                <button class="modal-close" id="closeInviteModal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">
-                Partagez ce lien avec vos amis pour qu'ils puissent créer un compte et chatter avec vous.
-                Une fois qu'ils auront créé leur compte, vous pourrez commencer une nouvelle discussion avec eux.
-            </p>
-            
-            <div class="invite-link-container">
-                <div class="invite-link">
-                    <input type="text" id="inviteLink" readonly value="Chargement...">
-                    <button class="copy-button" id="copyLinkBtn">
-                        <i class="fas fa-copy"></i> Copier
-                    </button>
-                </div>
-            </div>
-            
-            <div class="qr-code">
-                <div class="qr-placeholder">
-                    <div style="text-align: center;">
-                        <i class="fas fa-qrcode" style="font-size: 40px; margin-bottom: 10px;"></i>
-                        <div>Lien d'invitation</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="share-options">
-                <div class="share-option" id="shareWhatsApp">
-                    <div class="share-icon">
-                        <i class="fab fa-whatsapp"></i>
-                    </div>
-                    <div>WhatsApp</div>
-                </div>
-                <div class="share-option" id="shareEmail">
-                    <div class="share-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div>Email</div>
-                </div>
-                <div class="share-option" id="shareSMS">
-                    <div class="share-icon">
-                        <i class="fas fa-sms"></i>
-                    </div>
-                    <div>SMS</div>
-                </div>
-                <div class="share-option" id="shareLink">
-                    <div class="share-icon">
-                        <i class="fas fa-link"></i>
-                    </div>
-                    <div>Lien direct</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal Nouveau Chat -->
     <div id="newChatModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
@@ -1343,40 +1523,34 @@
                 </button>
             </div>
             
-            <div id="newChatContent">
-                <!-- Contenu chargé dynamiquement -->
-                <div class="empty-state" style="padding: 20px;">
-                    <div class="empty-state-icon">
-                        <i class="fas fa-user-friends"></i>
-                    </div>
-                    <div class="empty-state-title">Aucun contact disponible</div>
-                    <div class="empty-state-desc">
-                        Invitez d'abord un ami à créer un compte pour pouvoir chatter avec lui.
-                    </div>
-                    <button class="empty-state-button" id="inviteFromNewChatBtn" style="margin-top: 20px;">
-                        <i class="fas fa-user-plus"></i> Inviter un ami
-                    </button>
-                </div>
+            <div class="modal-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchUser" placeholder="Rechercher un utilisateur...">
+            </div>
+            
+            <div class="modal-users" id="modalUsers">
+                <!-- Utilisateurs chargés dynamiquement -->
             </div>
         </div>
     </div>
 
     <script>
         // ==============================================
-        // WhatsApp Web Réel - Application Fonctionnelle
+        // WhatsApp Web Réel - Version Finale Complète
         // ==============================================
         
-        class RealWhatsApp {
+        class WhatsAppApp {
             constructor() {
                 // État de l'application
                 this.currentUser = null;
                 this.currentChat = null;
-                this.users = new Map(); // Tous les utilisateurs inscrits
-                this.chats = new Map(); // Conversations
-                this.messages = new Map(); // Messages par chat
+                this.users = new Map();
+                this.chats = new Map();
+                this.messages = new Map();
+                this.typingTimeouts = new Map();
                 
                 // Clé de stockage
-                this.STORAGE_KEY = 'real_whatsapp_data';
+                this.STORAGE_KEY = 'whatsapp_app_data';
                 
                 // Initialisation
                 this.init();
@@ -1389,8 +1563,8 @@
                 // Initialiser les événements
                 this.initEvents();
                 
-                // Vérifier si on a un utilisateur dans l'URL (invitation acceptée)
-                this.checkUrlParams();
+                // Initialiser les utilisateurs par défaut (pour la démo)
+                this.initDemoUsers();
             }
             
             loadData() {
@@ -1439,6 +1613,51 @@
                 }
             }
             
+            initDemoUsers() {
+                // Créer quelques utilisateurs de démo s'ils n'existent pas
+                const demoUsers = [
+                    {
+                        id: 'demo_user_1',
+                        name: 'Marie Martin',
+                        email: 'marie@demo.com',
+                        password: 'demo123',
+                        avatarColor: '#e91e63',
+                        createdAt: new Date().toISOString(),
+                        isDemo: true
+                    },
+                    {
+                        id: 'demo_user_2',
+                        name: 'Pierre Dubois',
+                        email: 'pierre@demo.com',
+                        password: 'demo123',
+                        avatarColor: '#2196f3',
+                        createdAt: new Date().toISOString(),
+                        isDemo: true
+                    },
+                    {
+                        id: 'demo_user_3',
+                        name: 'Sophie Bernard',
+                        email: 'sophie@demo.com',
+                        password: 'demo123',
+                        avatarColor: '#4caf50',
+                        createdAt: new Date().toISOString(),
+                        isDemo: true
+                    }
+                ];
+                
+                let shouldSave = false;
+                demoUsers.forEach(demoUser => {
+                    if (!this.users.has(demoUser.id)) {
+                        this.users.set(demoUser.id, demoUser);
+                        shouldSave = true;
+                    }
+                });
+                
+                if (shouldSave) {
+                    this.saveData();
+                }
+            }
+            
             initEvents() {
                 // Navigation des onglets
                 document.getElementById('tabLogin').addEventListener('click', () => this.showLoginForm());
@@ -1455,25 +1674,19 @@
                     this.handleRegister();
                 });
                 
-                // Boutons d'invitation
-                document.getElementById('inviteFriendBtn').addEventListener('click', () => this.showInviteModal());
-                document.getElementById('inviteFromEmptyBtn').addEventListener('click', () => this.showInviteModal());
-                document.getElementById('inviteFromNewChatBtn').addEventListener('click', () => this.showInviteModal());
-                document.getElementById('inviteBtn').addEventListener('click', () => this.showInviteModal());
+                // Bouton démo
+                document.getElementById('demoButton').addEventListener('click', () => this.useDemoAccount());
                 
                 // Boutons de l'application
                 document.getElementById('newChatBtn').addEventListener('click', () => this.showNewChatModal());
+                document.getElementById('startNewChatBtn').addEventListener('click', () => this.showNewChatModal());
                 document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
-                document.getElementById('closeInviteModal').addEventListener('click', () => this.hideInviteModal());
                 document.getElementById('closeNewChatModal').addEventListener('click', () => this.hideNewChatModal());
                 document.getElementById('backButton').addEventListener('click', () => this.hideChatWindow());
-                document.getElementById('copyLinkBtn').addEventListener('click', () => this.copyInviteLink());
                 
-                // Partage
-                document.getElementById('shareWhatsApp').addEventListener('click', () => this.shareViaWhatsApp());
-                document.getElementById('shareEmail').addEventListener('click', () => this.shareViaEmail());
-                document.getElementById('shareSMS').addEventListener('click', () => this.shareViaSMS());
-                document.getElementById('shareLink').addEventListener('click', () => this.shareLink());
+                // Recherche
+                document.getElementById('searchChat').addEventListener('input', (e) => this.searchChats(e.target.value));
+                document.getElementById('searchUser').addEventListener('input', (e) => this.searchUsers(e.target.value));
                 
                 // Messagerie
                 document.getElementById('sendButton').addEventListener('click', () => this.sendMessage());
@@ -1490,28 +1703,32 @@
                     this.style.height = Math.min(this.scrollHeight, 150) + 'px';
                 });
                 
-                // Recherche
-                document.getElementById('searchChat').addEventListener('input', (e) => this.searchChats(e.target.value));
-                
-                // Événements pour mobile
+                // Gestion du focus pour mobile
                 this.initMobileEvents();
             }
             
             initMobileEvents() {
                 const backButton = document.getElementById('backButton');
                 
-                if (window.innerWidth <= 768) {
-                    backButton.style.display = 'flex';
+                // Cacher le bouton retour sur desktop
+                if (window.innerWidth > 768) {
+                    backButton.style.display = 'none';
                 }
                 
+                // Gérer le redimensionnement
                 window.addEventListener('resize', () => {
-                    if (window.innerWidth <= 768) {
-                        backButton.style.display = 'flex';
-                    } else {
+                    if (window.innerWidth > 768) {
                         backButton.style.display = 'none';
                         document.getElementById('chatWindow').classList.remove('active');
                         document.getElementById('sidebar').classList.remove('hidden');
+                    } else {
+                        backButton.style.display = 'flex';
                     }
+                });
+                
+                // Fermer le clavier virtuel quand on scroll sur mobile
+                document.getElementById('messagesContainer').addEventListener('touchstart', () => {
+                    document.activeElement.blur();
                 });
             }
             
@@ -1519,22 +1736,6 @@
                 if (window.innerWidth <= 768) {
                     document.getElementById('chatWindow').classList.remove('active');
                     document.getElementById('sidebar').classList.remove('hidden');
-                }
-            }
-            
-            checkUrlParams() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const invitedBy = urlParams.get('invitedBy');
-                
-                if (invitedBy) {
-                    // On a été invité par quelqu'un
-                    localStorage.setItem('invited_by', invitedBy);
-                    
-                    // Nettoyer l'URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    
-                    // Afficher un message
-                    this.showNotification(`Vous avez été invité par ${invitedBy}`, 'info');
                 }
             }
             
@@ -1589,6 +1790,7 @@
                 
                 if (user) {
                     await this.loginUser(user);
+                    this.showNotification(`Bienvenue ${user.name} !`, 'success');
                 } else {
                     this.hideLoader();
                     this.showError('loginError', 'Email ou mot de passe incorrect');
@@ -1626,10 +1828,6 @@
                 // Simulation de délai réseau
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
-                // Vérifier si on a été invité par quelqu'un
-                const invitedBy = localStorage.getItem('invited_by');
-                localStorage.removeItem('invited_by');
-                
                 // Créer le nouvel utilisateur
                 const newUser = {
                     id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
@@ -1638,19 +1836,11 @@
                     password: password,
                     avatarColor: this.getRandomColor(),
                     createdAt: new Date().toISOString(),
-                    invitedBy: invitedBy || null
+                    isDemo: false
                 };
                 
                 // Ajouter l'utilisateur
                 this.users.set(newUser.id, newUser);
-                
-                // Si on a été invité, créer automatiquement un chat avec la personne qui a invité
-                if (invitedBy) {
-                    const inviterUser = Array.from(this.users.values()).find(u => u.name === invitedBy);
-                    if (inviterUser) {
-                        await this.createChatWithUser(inviterUser);
-                    }
-                }
                 
                 // Sauvegarder
                 this.saveData();
@@ -1658,24 +1848,20 @@
                 // Connecter l'utilisateur
                 await this.loginUser(newUser);
                 
-                this.showNotification(`Bienvenue ${name} !`, 'success');
+                this.showNotification(`Compte créé avec succès ! Bienvenue ${name}`, 'success');
+            }
+            
+            useDemoAccount() {
+                this.showLoader('Chargement de la démo...');
                 
-                // Si on a été invité, ouvrir le chat avec la personne qui a invité
-                if (invitedBy) {
-                    const inviterUser = Array.from(this.users.values()).find(u => u.name === invitedBy);
-                    if (inviterUser) {
-                        const chat = Array.from(this.chats.values()).find(c => 
-                            !c.isGroup && 
-                            c.participants.includes(newUser.id) && 
-                            c.participants.includes(inviterUser.id)
-                        );
-                        if (chat) {
-                            setTimeout(() => {
-                                this.openChat(chat, inviterUser);
-                            }, 1000);
-                        }
+                setTimeout(() => {
+                    // Utiliser le premier compte démo
+                    const demoUser = Array.from(this.users.values()).find(u => u.isDemo);
+                    if (demoUser) {
+                        this.loginUser(demoUser);
+                        this.showNotification(`Mode démo activé avec le compte ${demoUser.name}`, 'info');
                     }
-                }
+                }, 800);
             }
             
             async loginUser(user) {
@@ -1687,10 +1873,17 @@
                 // Charger les données
                 this.loadUserChats();
                 
+                // Créer des conversations par défaut si nécessaire
+                if (!Array.from(this.chats.values()).some(c => c.participants.includes(user.id))) {
+                    this.createDefaultChats();
+                }
+                
                 this.hideLoader();
                 
-                // Sauvegarder
-                this.saveData();
+                // Focus sur la recherche
+                setTimeout(() => {
+                    document.getElementById('searchChat').focus();
+                }, 100);
             }
             
             showApp() {
@@ -1713,6 +1906,7 @@
                     document.getElementById('homePage').style.display = 'flex';
                     this.clearForms();
                     this.clearErrors();
+                    this.showNotification('Déconnexion réussie', 'info');
                 }
             }
             
@@ -1722,6 +1916,7 @@
                 document.getElementById('registerName').value = '';
                 document.getElementById('registerEmail').value = '';
                 document.getElementById('registerPassword').value = '';
+                document.getElementById('searchUser').value = '';
             }
             
             // ==============================================
@@ -1782,6 +1977,9 @@
                 element.className = `chat-item ${this.currentChat?.id === chat.id ? 'active' : ''}`;
                 element.dataset.chatId = chat.id;
                 
+                // Compter les messages non lus
+                const unreadCount = this.getUnreadCount(chat.id);
+                
                 // Formater la date
                 const lastMessageDate = chat.lastMessageAt ? new Date(chat.lastMessageAt) : new Date(chat.createdAt);
                 const timeString = this.formatDate(lastMessageDate);
@@ -1797,6 +1995,7 @@
                         </div>
                         <div class="chat-preview">
                             <div class="chat-last-message">${chat.lastMessage || 'Aucun message'}</div>
+                            ${unreadCount > 0 ? `<div class="chat-unread">${unreadCount}</div>` : ''}
                         </div>
                     </div>
                 `;
@@ -1807,6 +2006,9 @@
             
             openChat(chat, otherUser) {
                 this.currentChat = chat;
+                
+                // Marquer les messages comme lus
+                this.markMessagesAsRead(chat.id);
                 
                 // Mettre à jour l'interface
                 document.getElementById('chatContactName').textContent = otherUser.name;
@@ -1840,17 +2042,20 @@
                 messagesContainer.innerHTML = '';
                 
                 if (chatMessages.length === 0) {
-                    const welcomeMsg = this.createMessageElement({
-                        id: 'welcome',
-                        senderId: 'system',
-                        text: 'Commencez la conversation !',
-                        timestamp: new Date().toISOString(),
-                        isSystem: true
-                    });
-                    messagesContainer.appendChild(welcomeMsg);
+                    this.showEmptyChatMessage();
                 } else {
-                    // Afficher tous les messages
+                    // Grouper les messages par date
+                    let currentDate = null;
+                    
                     chatMessages.forEach(message => {
+                        const messageDate = new Date(message.timestamp).toDateString();
+                        
+                        if (currentDate !== messageDate) {
+                            currentDate = messageDate;
+                            const dateLabel = this.createDateSeparator(new Date(message.timestamp));
+                            messagesContainer.appendChild(dateLabel);
+                        }
+                        
                         const messageElement = this.createMessageElement(message);
                         messagesContainer.appendChild(messageElement);
                     });
@@ -1858,6 +2063,43 @@
                 
                 // Scroll vers le bas
                 this.scrollToBottom();
+            }
+            
+            showEmptyChatMessage() {
+                const messagesContainer = document.getElementById('messagesContainer');
+                const welcomeMsg = this.createMessageElement({
+                    id: 'welcome',
+                    senderId: 'system',
+                    text: 'Commencez la conversation ! Envoyez le premier message.',
+                    timestamp: new Date().toISOString(),
+                    isSystem: true
+                });
+                messagesContainer.appendChild(welcomeMsg);
+            }
+            
+            createDateSeparator(date) {
+                const element = document.createElement('div');
+                element.className = 'message-date';
+                
+                const today = new Date();
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                let dateText;
+                if (date.toDateString() === today.toDateString()) {
+                    dateText = 'Aujourd\'hui';
+                } else if (date.toDateString() === yesterday.toDateString()) {
+                    dateText = 'Hier';
+                } else {
+                    dateText = date.toLocaleDateString('fr-FR', { 
+                        weekday: 'long', 
+                        day: 'numeric', 
+                        month: 'long' 
+                    });
+                }
+                
+                element.innerHTML = `<span class="date-label">${dateText}</span>`;
+                return element;
             }
             
             createMessageElement(message) {
@@ -1885,9 +2127,15 @@
                 const timeString = this.formatTime(new Date(message.timestamp));
                 
                 element.innerHTML = `
-                    <div class="message-bubble">${message.text}</div>
+                    ${!isSent && sender ? `<div style="font-size: 12px; color: var(--accent-blue); margin-bottom: 4px; font-weight: 500;">
+                        ${sender.name}
+                    </div>` : ''}
+                    <div class="message-bubble">${this.formatMessageText(message.text)}</div>
                     <div class="message-info">
                         <div class="message-time">${timeString}</div>
+                        ${isSent ? `<div style="color: rgba(255, 255, 255, 0.6); font-size: 11px;">
+                            <i class="fas fa-check"></i>
+                        </div>` : ''}
                     </div>
                 `;
                 
@@ -1906,7 +2154,8 @@
                     chatId: this.currentChat.id,
                     senderId: this.currentUser.id,
                     text: text,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    read: false
                 };
                 
                 // Ajouter le message
@@ -1935,76 +2184,142 @@
                 
                 // Mettre à jour la liste des chats
                 this.loadUserChats();
-            }
-            
-            // ==============================================
-            // INVITATIONS
-            // ==============================================
-            
-            showInviteModal() {
-                document.getElementById('inviteModal').style.display = 'flex';
                 
-                // Générer le lien d'invitation
-                const inviteLink = this.generateInviteLink();
-                document.getElementById('inviteLink').value = inviteLink;
+                // Simuler une réponse automatique
+                this.simulateAutoReply();
             }
             
-            hideInviteModal() {
-                document.getElementById('inviteModal').style.display = 'none';
-            }
-            
-            generateInviteLink() {
-                const currentUrl = window.location.origin + window.location.pathname;
-                return `${currentUrl}?invitedBy=${encodeURIComponent(this.currentUser.name)}`;
-            }
-            
-            copyInviteLink() {
-                const linkInput = document.getElementById('inviteLink');
-                linkInput.select();
-                linkInput.setSelectionRange(0, 99999);
+            simulateAutoReply() {
+                if (!this.currentChat) return;
                 
-                try {
-                    navigator.clipboard.writeText(linkInput.value).then(() => {
-                        this.showNotification('Lien copié dans le presse-papier !', 'success');
-                    }).catch(() => {
-                        // Fallback pour les anciens navigateurs
-                        document.execCommand('copy');
-                        this.showNotification('Lien copié !', 'success');
-                    });
-                } catch (error) {
-                    document.execCommand('copy');
-                    this.showNotification('Lien copié !', 'success');
-                }
+                // Trouver l'autre participant
+                const otherParticipants = this.currentChat.participants.filter(id => id !== this.currentUser.id);
+                if (otherParticipants.length === 0) return;
+                
+                const otherUserId = otherParticipants[0];
+                const otherUser = this.users.get(otherUserId);
+                if (!otherUser || !otherUser.isDemo) return;
+                
+                // Réponses automatiques pour les utilisateurs démo
+                const autoReplies = [
+                    "Salut ! Comment vas-tu ? 😊",
+                    "Je viens juste de voir ton message !",
+                    "C'est une bonne idée ça 👍",
+                    "On se voit plus tard ?",
+                    "Merci pour l'info !",
+                    "Je suis d'accord avec toi",
+                    "Bonne journée ! ☀️",
+                    "À tout à l'heure 👋",
+                    "Super conversation !",
+                    "Je suis là si tu as besoin 😊"
+                ];
+                
+                // Attendre 1-3 secondes
+                const delay = 1000 + Math.random() * 2000;
+                
+                setTimeout(() => {
+                    const replyText = autoReplies[Math.floor(Math.random() * autoReplies.length)];
+                    
+                    const replyMessage = {
+                        id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        chatId: this.currentChat.id,
+                        senderId: otherUserId,
+                        text: replyText,
+                        timestamp: new Date().toISOString(),
+                        read: false
+                    };
+                    
+                    // Ajouter la réponse
+                    const chatMessages = this.messages.get(this.currentChat.id) || [];
+                    chatMessages.push(replyMessage);
+                    this.messages.set(this.currentChat.id, chatMessages);
+                    
+                    // Mettre à jour le chat
+                    this.currentChat.lastMessage = replyText.length > 40 ? replyText.substring(0, 40) + '...' : replyText;
+                    this.currentChat.lastMessageAt = replyMessage.timestamp;
+                    
+                    this.saveData();
+                    
+                    // Afficher la réponse si le chat est toujours ouvert
+                    if (this.currentChat && this.currentChat.id === this.currentChat.id) {
+                        const messageElement = this.createMessageElement(replyMessage);
+                        document.getElementById('messagesContainer').appendChild(messageElement);
+                        this.scrollToBottom();
+                    }
+                    
+                    // Mettre à jour la liste des chats
+                    this.loadUserChats();
+                    
+                    // Notification
+                    if (document.hidden || !this.currentChat || this.currentChat.id !== this.currentChat.id) {
+                        this.showNotification(`${otherUser.name}: ${replyText}`, 'info');
+                    }
+                    
+                }, delay);
             }
             
-            shareViaWhatsApp() {
-                const link = document.getElementById('inviteLink').value;
-                const text = `Rejoins-moi sur WhatsApp Web ! Clique sur ce lien : ${link}`;
-                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-                window.open(whatsappUrl, '_blank');
+            markMessagesAsRead(chatId) {
+                const messages = this.messages.get(chatId) || [];
+                messages.forEach(msg => {
+                    if (msg.senderId !== this.currentUser.id) {
+                        msg.read = true;
+                    }
+                });
+                this.saveData();
             }
             
-            shareViaEmail() {
-                const link = document.getElementById('inviteLink').value;
-                const subject = 'Rejoins-moi sur WhatsApp Web';
-                const body = `Salut !\n\nRejoins-moi sur WhatsApp Web en cliquant sur ce lien : ${link}\n\nÀ bientôt !`;
-                const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.location.href = mailtoUrl;
+            getUnreadCount(chatId) {
+                const messages = this.messages.get(chatId) || [];
+                return messages.filter(msg => 
+                    msg.senderId !== this.currentUser.id && !msg.read
+                ).length;
             }
             
-            shareViaSMS() {
-                const link = document.getElementById('inviteLink').value;
-                const text = `Rejoins-moi sur WhatsApp Web : ${link}`;
-                const smsUrl = `sms:?body=${encodeURIComponent(text)}`;
-                window.location.href = smsUrl;
-            }
-            
-            shareLink() {
-                this.copyInviteLink();
+            createDefaultChats() {
+                if (!this.currentUser) return;
+                
+                // Créer des conversations avec les utilisateurs démo
+                const demoUsers = Array.from(this.users.values())
+                    .filter(u => u.isDemo && u.id !== this.currentUser.id)
+                    .slice(0, 2);
+                
+                demoUsers.forEach(demoUser => {
+                    const chatId = 'chat_demo_' + demoUser.id;
+                    
+                    // Vérifier si le chat existe déjà
+                    if (!this.chats.has(chatId)) {
+                        const chat = {
+                            id: chatId,
+                            participants: [this.currentUser.id, demoUser.id],
+                            lastMessage: '',
+                            lastMessageAt: null,
+                            createdAt: new Date().toISOString(),
+                            isGroup: false
+                        };
+                        
+                        this.chats.set(chatId, chat);
+                        
+                        // Message de bienvenue
+                        const welcomeMessage = {
+                            id: 'msg_welcome_' + chatId,
+                            chatId: chatId,
+                            senderId: demoUser.id,
+                            text: `Bonjour ! Je suis ${demoUser.name}. Heureux de vous rencontrer ! 😊`,
+                            timestamp: new Date(Date.now() - 3600000).toISOString(),
+                            read: false
+                        };
+                        
+                        this.messages.set(chatId, [welcomeMessage]);
+                        chat.lastMessage = welcomeMessage.text;
+                        chat.lastMessageAt = welcomeMessage.timestamp;
+                    }
+                });
+                
+                this.saveData();
             }
             
             // ==============================================
-            // NOUVEAU CHAT
+            // MODAL NOUVEAU CHAT
             // ==============================================
             
             showNewChatModal() {
@@ -2014,40 +2329,32 @@
             
             hideNewChatModal() {
                 document.getElementById('newChatModal').style.display = 'none';
+                document.getElementById('searchUser').value = '';
             }
             
             loadAvailableUsers() {
-                const newChatContent = document.getElementById('newChatContent');
+                const modalUsers = document.getElementById('modalUsers');
                 
                 // Récupérer les autres utilisateurs
                 const otherUsers = Array.from(this.users.values())
                     .filter(user => user.id !== this.currentUser.id);
                 
                 if (otherUsers.length === 0) {
-                    newChatContent.innerHTML = `
-                        <div class="empty-state" style="padding: 20px;">
+                    modalUsers.innerHTML = `
+                        <div class="empty-state" style="padding: 30px;">
                             <div class="empty-state-icon">
                                 <i class="fas fa-user-friends"></i>
                             </div>
-                            <div class="empty-state-title">Aucun contact disponible</div>
+                            <div class="empty-state-title">Aucun utilisateur disponible</div>
                             <div class="empty-state-desc">
-                                Invitez d'abord un ami à créer un compte pour pouvoir chatter avec lui.
+                                Créez d'abord d'autres comptes pour pouvoir chatter.
                             </div>
-                            <button class="empty-state-button" id="inviteFromModalBtn" style="margin-top: 20px;">
-                                <i class="fas fa-user-plus"></i> Inviter un ami
-                            </button>
                         </div>
                     `;
-                    
-                    document.getElementById('inviteFromModalBtn').addEventListener('click', () => {
-                        this.hideNewChatModal();
-                        this.showInviteModal();
-                    });
-                    
                     return;
                 }
                 
-                let html = '<div style="max-height: 400px; overflow-y: auto;">';
+                let html = '';
                 
                 otherUsers.forEach(user => {
                     // Vérifier si un chat existe déjà
@@ -2057,30 +2364,29 @@
                         chat.participants.includes(user.id)
                     );
                     
+                    const statusText = existingChat ? 'Conversation existante' : 'Nouvelle discussion';
+                    const statusColor = existingChat ? 'var(--text-secondary)' : 'var(--green-whatsapp)';
+                    
                     html += `
-                        <div class="chat-item" data-user-id="${user.id}" style="cursor: pointer; margin-bottom: 10px;">
-                            <div class="chat-avatar" style="background-color: ${user.avatarColor}">
+                        <div class="user-item" data-user-id="${user.id}">
+                            <div class="user-item-avatar" style="background-color: ${user.avatarColor}">
                                 ${this.getInitials(user.name)}
                             </div>
-                            <div class="chat-info">
-                                <div class="chat-header">
-                                    <div class="chat-name">${user.name}</div>
-                                </div>
-                                <div class="chat-preview">
-                                    <div class="chat-last-message">
-                                        ${existingChat ? 'Conversation existante' : 'Nouvelle discussion'}
-                                    </div>
+                            <div class="user-item-info">
+                                <div class="user-item-name">${user.name}</div>
+                                <div class="user-item-status" style="color: ${statusColor}">
+                                    <i class="fas fa-${existingChat ? 'comment' : 'plus-circle'}"></i>
+                                    ${statusText}
                                 </div>
                             </div>
                         </div>
                     `;
                 });
                 
-                html += '</div>';
-                newChatContent.innerHTML = html;
+                modalUsers.innerHTML = html;
                 
                 // Ajouter les événements
-                newChatContent.querySelectorAll('.chat-item').forEach(item => {
+                modalUsers.querySelectorAll('.user-item').forEach(item => {
                     item.addEventListener('click', () => {
                         const userId = item.dataset.userId;
                         const user = this.users.get(userId);
@@ -2092,7 +2398,7 @@
                 });
             }
             
-            async startChatWithUser(user) {
+            startChatWithUser(user) {
                 // Chercher un chat existant
                 let chat = Array.from(this.chats.values()).find(c => 
                     !c.isGroup && 
@@ -2102,15 +2408,17 @@
                 
                 // Créer un nouveau chat si nécessaire
                 if (!chat) {
-                    chat = await this.createChatWithUser(user);
+                    chat = this.createNewChatWithUser(user);
                 }
                 
                 // Ouvrir le chat
                 this.openChat(chat, user);
                 this.loadUserChats();
+                
+                this.showNotification(`Conversation avec ${user.name}`, 'info');
             }
             
-            async createChatWithUser(user) {
+            createNewChatWithUser(user) {
                 const chat = {
                     id: 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                     participants: [this.currentUser.id, user.id],
@@ -2154,7 +2462,24 @@
                         <div class="empty-state-title">Aucun résultat</div>
                         <div class="empty-state-desc">Aucune conversation ne correspond à "${query}"</div>
                     `;
+                } else if (hasResults) {
+                    emptyState.style.display = 'none';
                 }
+            }
+            
+            searchUsers(query) {
+                const userItems = document.querySelectorAll('.user-item');
+                const lowerQuery = query.toLowerCase().trim();
+                
+                userItems.forEach(item => {
+                    const userName = item.querySelector('.user-item-name').textContent.toLowerCase();
+                    
+                    if (userName.includes(lowerQuery)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
             }
             
             // ==============================================
@@ -2213,6 +2538,22 @@
                 });
             }
             
+            formatMessageText(text) {
+                // Échapper le HTML pour la sécurité
+                const div = document.createElement('div');
+                div.textContent = text;
+                let escapedText = div.innerHTML;
+                
+                // Remplacer les sauts de ligne par <br>
+                escapedText = escapedText.replace(/\n/g, '<br>');
+                
+                // Simple mise en forme (optionnelle)
+                escapedText = escapedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                escapedText = escapedText.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                
+                return escapedText;
+            }
+            
             scrollToBottom() {
                 const messagesContainer = document.getElementById('messagesContainer');
                 setTimeout(() => {
@@ -2233,17 +2574,27 @@
                 const element = document.getElementById(elementId);
                 element.textContent = message;
                 element.style.display = 'block';
+                
+                // Masquer après 5 secondes
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000);
             }
             
             showNotification(message, type = 'info') {
                 const notification = document.createElement('div');
                 notification.className = 'notification';
                 
+                const icon = type === 'success' ? 'check-circle' : 
+                            type === 'error' ? 'exclamation-circle' : 
+                            type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+                
                 notification.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}" 
-                           style="color: ${type === 'success' ? 'var(--success)' : 'var(--accent-blue)'}; font-size: 24px;"></i>
-                        <div>${message}</div>
+                    <div class="notification-icon">
+                        <i class="fas fa-${icon}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-message">${message}</div>
                     </div>
                 `;
                 
@@ -2260,7 +2611,12 @@
         
         // Initialiser l'application
         document.addEventListener('DOMContentLoaded', () => {
-            window.whatsapp = new RealWhatsApp();
+            window.whatsapp = new WhatsAppApp();
+            
+            // Focus sur le premier champ
+            setTimeout(() => {
+                document.getElementById('loginEmail').focus();
+            }, 100);
         });
     </script>
 </body>
