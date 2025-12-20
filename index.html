@@ -727,9 +727,16 @@
                 this.SESSION_KEY = 'whatsapp_session';
                 
                 this.loadData();
-                this.createTestUsers();
+                // Les comptes de test sont supprimés - uniquement de vrais utilisateurs
                 this.render();
                 this.checkSession();
+                
+                // Synchronisation en temps réel toutes les 3 secondes
+                setInterval(() => {
+                    if (this.currentUser) {
+                        this.syncData();
+                    }
+                }, 3000);
             }
 
             loadData() {
@@ -746,24 +753,45 @@
                 const data = {
                     users: Array.from(this.users.values()),
                     chats: Array.from(this.chats.values()),
-                    messages: Object.fromEntries(this.messages)
+                    messages: Object.fromEntries(this.messages),
+                    lastUpdate: Date.now()
                 };
                 localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
             }
 
-            createTestUsers() {
-                if (this.users.size === 0) {
-                    ['Alice Martin', 'Bob Dupont', 'Claire Bernard'].forEach((name, i) => {
-                        this.users.set(`user_${i+1}`, {
-                            id: `user_${i+1}`,
-                            name,
-                            email: `${name.split(' ')[0].toLowerCase()}@test.com`,
-                            password: 'test123',
-                            avatarColor: ['#e91e63', '#2196f3', '#4caf50'][i]
-                        });
+            syncData() {
+                // Recharger les données pour voir les nouveaux messages
+                const data = localStorage.getItem(this.STORAGE_KEY);
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    
+                    // Mettre à jour les utilisateurs
+                    parsed.users?.forEach(u => {
+                        if (!this.users.has(u.id)) {
+                            this.users.set(u.id, u);
+                        }
                     });
-                    this.saveData();
+                    
+                    // Mettre à jour les chats
+                    parsed.chats?.forEach(c => {
+                        this.chats.set(c.id, c);
+                    });
+                    
+                    // Mettre à jour les messages
+                    Object.entries(parsed.messages || {}).forEach(([k, v]) => {
+                        this.messages.set(k, v);
+                    });
+                    
+                    // Rafraîchir l'affichage
+                    if (this.currentChat) {
+                        this.loadMessages();
+                    }
+                    this.loadChats();
                 }
+            }
+
+            createTestUsers() {
+                // Fonction supprimée - plus de comptes de test
             }
 
             checkSession() {
@@ -1183,7 +1211,19 @@
                 if (!container) return;
                 
                 const otherUsers = Array.from(this.users.values())
-                    .filter(u => u.id !== this.currentUser.id);
+                    .filter(u => u.id !== this.currentUser.id)
+                    .sort((a, b) => a.name.localeCompare(b.name));
+                
+                if (otherUsers.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align:center;padding:40px;color:var(--text-secondary)">
+                            <i class="fas fa-users" style="font-size:50px;margin-bottom:15px;display:block;opacity:0.3"></i>
+                            <div style="font-size:16px;margin-bottom:10px">Aucun autre utilisateur</div>
+                            <div style="font-size:14px">Les nouveaux utilisateurs apparaîtront ici</div>
+                        </div>
+                    `;
+                    return;
+                }
                 
                 container.innerHTML = otherUsers.map(user => `
                     <div class="user-item" onclick="app.startChat('${user.id}')">
@@ -1192,7 +1232,10 @@
                         </div>
                         <div style="flex:1">
                             <div style="font-weight:600">${user.name}</div>
-                            <div style="font-size:13px;color:var(--text-secondary)">${user.email}</div>
+                            <div style="font-size:13px;color:var(--text-secondary)">
+                                <i class="fas fa-circle" style="font-size:8px;color:var(--green-whatsapp);margin-right:5px"></i>
+                                En ligne
+                            </div>
                         </div>
                     </div>
                 `).join('');
@@ -1262,11 +1305,10 @@
         let app;
         document.addEventListener('DOMContentLoaded', () => {
             app = new WhatsAppApp();
-            console.log('WhatsApp Web - Prêt à être mis en ligne');
-            console.log('Comptes de test disponibles:');
-            console.log('- alice@test.com / test123');
-            console.log('- bob@test.com / test123');
-            console.log('- claire@test.com / test123');
+            console.log('WhatsApp Web - Application de messagerie réelle');
+            console.log('✅ Créez votre compte pour commencer');
+            console.log('✅ Invitez vos amis à créer leurs comptes');
+            console.log('✅ Chattez en temps réel avec synchronisation automatique');
         });
     </script>
 </body>
