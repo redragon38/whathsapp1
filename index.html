@@ -845,6 +845,9 @@
                         <div class="auth-panel">
                             <div class="auth-header">
                                 <h2 class="auth-title">Bienvenue</h2>
+                                <button onclick="app.resetApp()" style="background:var(--danger);color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;margin-top:10px">
+                                    <i class="fas fa-trash"></i> Réinitialiser l'app
+                                </button>
                             </div>
                             <div class="auth-tabs">
                                 <div class="auth-tab active" onclick="app.showLogin()">Connexion</div>
@@ -1270,6 +1273,24 @@
                     this.currentUser = null;
                     this.currentChat = null;
                     this.showHomePage();
+                }
+            }
+
+            resetApp() {
+                if (confirm('⚠️ ATTENTION : Ceci va supprimer TOUS les comptes, conversations et messages.\n\nÊtes-vous sûr de vouloir réinitialiser l\'application ?')) {
+                    // Supprimer toutes les données
+                    localStorage.removeItem(this.STORAGE_KEY);
+                    localStorage.removeItem(this.SESSION_KEY);
+                    
+                    // Réinitialiser l'application
+                    this.users = new Map();
+                    this.chats = new Map();
+                    this.messages = new Map();
+                    this.currentUser = null;
+                    this.currentChat = null;
+                    
+                    alert('✅ Application réinitialisée ! Vous pouvez maintenant créer de vrais comptes.');
+                    location.reload();
                 }
             }
 
