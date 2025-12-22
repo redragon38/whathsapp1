@@ -327,35 +327,6 @@
             transform: scale(0.98);
         }
 
-        .auth-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-
-        .auth-btn:focus:not(:active)::after {
-            animation: ripple 1s ease-out;
-        }
-
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 0.5;
-            }
-            100% {
-                transform: scale(20, 20);
-                opacity: 0;
-            }
-        }
-
         .password-strength {
             height: 4px;
             background: var(--bg-2);
@@ -1456,6 +1427,88 @@
             transform: scale(0.95);
         }
 
+        /* ===== CONTACTS ===== */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            gap: 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 8px;
+            background: var(--bg-2);
+            touch-action: manipulation;
+        }
+
+        .contact-item:active {
+            background: var(--bg-3);
+            transform: scale(0.99);
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-email {
+            font-size: 12px;
+            color: var(--text-2);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .contact-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-1);
+            border: none;
+            color: var(--text-1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: var(--transition);
+            touch-action: manipulation;
+        }
+
+        .contact-btn:active {
+            background: var(--primary);
+            color: white;
+            transform: scale(0.95);
+        }
+
         /* ===== UTILITIES ===== */
         .hidden {
             display: none !important;
@@ -1726,6 +1779,43 @@
                 transition-duration: 0.01ms !important;
             }
         }
+
+        /* ===== EMPTY STATES ===== */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-2);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .empty-state-title {
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .empty-state-description {
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .empty-state-action {
+            padding: 12px 24px;
+            background: var(--gradient);
+            border: none;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            touch-action: manipulation;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -1792,7 +1882,7 @@
             <div class="status-actions">
                 <button class="status-btn" onclick="app.showNewChat()" style="position: relative;" aria-label="Nouveau chat">
                     <span>👤</span>
-                    <div class="status-badge" id="new-chats-badge" style="display: none;">3</div>
+                    <div class="status-badge" id="new-chats-badge" style="display: none;">0</div>
                 </button>
                 <button class="status-btn" onclick="app.showSettings()" aria-label="Paramètres">
                     <span>⚙️</span>
@@ -1822,13 +1912,13 @@
                     <span class="icon">👤</span>
                     Nouveau chat
                 </button>
-                <button class="action-btn" onclick="app.showNewGroup()">
-                    <span class="icon">👥</span>
-                    Nouveau groupe
+                <button class="action-btn" onclick="app.showContacts()">
+                    <span class="icon">📇</span>
+                    Contacts
                 </button>
-                <button class="action-btn" onclick="app.showArchivedChats()">
-                    <span class="icon">📁</span>
-                    Archives
+                <button class="action-btn" onclick="app.showSettings()">
+                    <span class="icon">⚙️</span>
+                    Paramètres
                 </button>
             </div>
 
@@ -1941,7 +2031,7 @@
         </div>
     </div>
 
-    <!-- Modals -->
+    <!-- New Chat Modal -->
     <div id="new-chat-modal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -1952,14 +2042,55 @@
                 <button class="modal-close" onclick="app.hideModal('new-chat-modal')" aria-label="Fermer">×</button>
             </div>
             <div class="modal-body">
-                <input type="text" class="search-input" placeholder="Rechercher un contact..." id="search-contacts" style="margin-bottom: 16px;" aria-label="Rechercher des contacts">
-                <div id="contacts-list">
-                    <!-- Contacts will be loaded here -->
+                <div class="settings-section">
+                    <h3 class="settings-title">Rechercher un utilisateur</h3>
+                    <input type="text" class="search-input" placeholder="Email ou nom d'utilisateur..." id="search-user" style="margin-bottom: 16px;" aria-label="Rechercher un utilisateur">
+                    <button class="auth-btn" onclick="app.searchUser()" style="width: 100%;">
+                        🔍 Rechercher
+                    </button>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title">Mes contacts</h3>
+                    <div id="contacts-list">
+                        <!-- Contacts will be loaded here -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Contacts Modal -->
+    <div id="contacts-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <span>📇</span>
+                    Gérer les contacts
+                </h2>
+                <button class="modal-close" onclick="app.hideModal('contacts-modal')" aria-label="Fermer">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3 class="settings-title">Ajouter un contact</h3>
+                    <input type="email" id="contact-email" class="form-input" placeholder="Email du contact" style="margin-bottom: 12px;">
+                    <input type="text" id="contact-name" class="form-input" placeholder="Nom du contact (optionnel)" style="margin-bottom: 16px;">
+                    <button class="auth-btn" onclick="app.addContact()" style="width: 100%;">
+                        ➕ Ajouter le contact
+                    </button>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title">Mes contacts</h3>
+                    <div id="contacts-management-list">
+                        <!-- Contacts will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
     <div id="settings-modal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -1982,6 +2113,10 @@
                     <div class="settings-item">
                         <div>Statut</div>
                         <input type="text" id="settings-status" class="form-input" style="width: 150px; padding: 8px;" placeholder="Disponible">
+                    </div>
+                    <div class="settings-item">
+                        <div>Email</div>
+                        <div id="settings-email" style="color: var(--text-2);">-</div>
                     </div>
                 </div>
 
@@ -2020,6 +2155,13 @@
                             <option value="86400">24 heures</option>
                         </select>
                     </div>
+                    <div class="settings-item">
+                        <div>Statut en ligne</div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="toggle-checkbox" id="online-status-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="settings-section">
@@ -2036,6 +2178,20 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="settings-section">
+                    <h3 class="settings-title">
+                        <span>💾</span>
+                        Données
+                    </h3>
+                    <div class="settings-item">
+                        <div>Espace utilisé</div>
+                        <div id="storage-used">0 KB</div>
+                    </div>
+                    <button class="modal-btn secondary" onclick="app.clearCache()" style="width: 100%; margin-top: 8px;">
+                        🗑️ Vider le cache
+                    </button>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="modal-btn danger" onclick="app.logout()">
@@ -2051,24 +2207,82 @@
         </div>
     </div>
 
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <span>👤</span>
+                    Mon profil
+                </h2>
+                <button class="modal-close" onclick="app.hideModal('profile-modal')" aria-label="Fermer">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div class="user-avatar" id="profile-avatar" style="width: 80px; height: 80px; font-size: 24px; margin: 0 auto 16px;"></div>
+                    <div style="font-size: 18px; font-weight: 700;" id="profile-name"></div>
+                    <div style="color: var(--text-2); margin-top: 4px;" id="profile-email"></div>
+                    <div style="color: var(--success); margin-top: 8px; font-size: 14px;" id="profile-status"></div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title">Statistiques</h3>
+                    <div class="settings-item">
+                        <div>Messages envoyés</div>
+                        <div id="profile-messages-count">0</div>
+                    </div>
+                    <div class="settings-item">
+                        <div>Conversations</div>
+                        <div id="profile-chats-count">0</div>
+                    </div>
+                    <div class="settings-item">
+                        <div>Contacts</div>
+                        <div id="profile-contacts-count">0</div>
+                    </div>
+                    <div class="settings-item">
+                        <div>Membre depuis</div>
+                        <div id="profile-join-date">-</div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title">Informations</h3>
+                    <div class="settings-item">
+                        <div>ID utilisateur</div>
+                        <div style="font-family: monospace; font-size: 12px; color: var(--text-2);" id="profile-user-id"></div>
+                    </div>
+                    <div class="settings-item">
+                        <div>Dernière connexion</div>
+                        <div id="profile-last-login">-</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn primary" onclick="app.hideModal('profile-modal')">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Hidden Inputs -->
     <input type="file" id="file-input" hidden multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt">
     <input type="file" id="camera-input" hidden accept="image/*" capture="camera">
 
     <script>
         // ============================================
-        // FLUXIO PRO - VERSION MOBILE OPTIMISÉE
-        // Toutes les fonctionnalités sont opérationnelles
+        // FLUXIO PRO - VERSION FINALE
+        // Système d'utilisateurs propre sans données de démo
         // ============================================
 
         class FluxioApp {
             constructor() {
                 this.currentUser = null;
                 this.currentChat = null;
-                this.users = new Map();
-                this.chats = new Map();
-                this.messages = new Map();
-                this.contacts = new Map();
+                this.users = new Map(); // Tous les utilisateurs enregistrés
+                this.chats = new Map(); // Conversations
+                this.messages = new Map(); // Messages par conversation
+                this.contacts = new Map(); // Contacts de l'utilisateur
                 this.mediaStream = null;
                 this.peerConnection = null;
                 this.currentCall = null;
@@ -2081,7 +2295,7 @@
             }
 
             init() {
-                console.log('📱 Fluxio Pro Mobile - Initialisation');
+                console.log('📱 Fluxio Pro - Initialisation');
                 this.loadData();
                 this.setupEventListeners();
                 this.simulateLoading();
@@ -2104,6 +2318,8 @@
             }
 
             preventPullToRefresh() {
+                if (!this.isMobile) return;
+                
                 let startY = 0;
                 const preventPullToRefresh = (e) => {
                     if (e.touches.length !== 1) return;
@@ -2136,206 +2352,71 @@
                 }, 300);
             }
 
+            // ===== GESTION DES DONNÉES =====
             loadData() {
                 try {
-                    const data = localStorage.getItem('fluxio_app_data');
-                    if (data) {
-                        const parsed = JSON.parse(data);
-                        this.users = new Map(parsed.users || []);
-                        this.chats = new Map(parsed.chats || []);
-                        this.messages = new Map(parsed.messages || []);
-                        this.contacts = new Map(parsed.contacts || []);
+                    // Charger les utilisateurs
+                    const usersData = localStorage.getItem('fluxio_users');
+                    if (usersData) {
+                        const users = JSON.parse(usersData);
+                        this.users = new Map(users.map(user => [user.id, user]));
+                    }
+
+                    // Charger les données de l'utilisateur courant
+                    const userData = localStorage.getItem('fluxio_user_data');
+                    if (userData) {
+                        const data = JSON.parse(userData);
+                        this.chats = new Map(data.chats || []);
+                        this.messages = new Map(data.messages || []);
+                        this.contacts = new Map(data.contacts || []);
                     }
                 } catch (e) {
                     console.log('Nouvelle installation détectée');
-                    this.createSampleData();
+                    this.initializeEmptyData();
                 }
             }
 
             saveData() {
                 try {
-                    const data = {
-                        users: Array.from(this.users.entries()),
-                        chats: Array.from(this.chats.entries()),
-                        messages: Array.from(this.messages.entries()),
-                        contacts: Array.from(this.contacts.entries()),
-                        version: '1.0.0'
-                    };
-                    localStorage.setItem('fluxio_app_data', JSON.stringify(data));
+                    // Sauvegarder tous les utilisateurs
+                    const usersArray = Array.from(this.users.values());
+                    localStorage.setItem('fluxio_users', JSON.stringify(usersArray));
+
+                    // Sauvegarder les données de l'utilisateur courant
+                    if (this.currentUser) {
+                        const userData = {
+                            chats: Array.from(this.chats.entries()),
+                            messages: Array.from(this.messages.entries()),
+                            contacts: Array.from(this.contacts.entries()),
+                            lastSync: Date.now()
+                        };
+                        localStorage.setItem('fluxio_user_data', JSON.stringify(userData));
+                    }
                 } catch (e) {
-                    console.error('Erreur sauvegarde');
+                    console.error('Erreur lors de la sauvegarde:', e);
+                    this.showNotification('Erreur de sauvegarde', 'error');
                 }
             }
 
-            createSampleData() {
-                // Créer l'utilisateur principal
-                const mainUser = {
-                    id: 'user_1',
-                    name: 'Vous',
-                    email: 'vous@example.com',
-                    password: 'demo123',
-                    avatarColor: '#0066FF',
-                    status: 'En ligne',
-                    isOnline: true,
-                    settings: {
-                        theme: 'dark',
-                        notifications: true,
-                        sounds: true,
-                        disappearingMessages: 0
-                    }
-                };
-                this.users.set(mainUser.id, mainUser);
-
-                // Créer des contacts de démonstration
-                const demoContacts = [
-                    {
-                        id: 'contact_1',
-                        name: 'Alexandre Martin',
-                        email: 'alex@example.com',
-                        status: 'En ligne',
-                        isOnline: true,
-                        avatarColor: '#6C63FF',
-                        lastSeen: Date.now()
-                    },
-                    {
-                        id: 'contact_2',
-                        name: 'Sophie Dubois',
-                        email: 'sophie@example.com',
-                        status: 'Disponible',
-                        isOnline: true,
-                        avatarColor: '#FF6584',
-                        lastSeen: Date.now() - 300000
-                    },
-                    {
-                        id: 'contact_3',
-                        name: 'Thomas Bernard',
-                        email: 'thomas@example.com',
-                        status: 'Occupé',
-                        isOnline: false,
-                        avatarColor: '#10B981',
-                        lastSeen: Date.now() - 3600000
-                    },
-                    {
-                        id: 'contact_4',
-                        name: 'Marie Curie',
-                        email: 'marie@example.com',
-                        status: 'En ligne',
-                        isOnline: true,
-                        avatarColor: '#F59E0B',
-                        lastSeen: Date.now()
-                    },
-                    {
-                        id: 'contact_5',
-                        name: 'Jean Dupont',
-                        email: 'jean@example.com',
-                        status: 'Absent',
-                        isOnline: false,
-                        avatarColor: '#3B82F6',
-                        lastSeen: Date.now() - 7200000
-                    }
-                ];
-
-                demoContacts.forEach(contact => {
-                    this.contacts.set(contact.id, contact);
-                    // Créer un utilisateur correspondant
-                    const user = {
-                        id: contact.id,
-                        name: contact.name,
-                        email: contact.email,
-                        password: 'demo123',
-                        avatarColor: contact.avatarColor,
-                        status: contact.status,
-                        isOnline: contact.isOnline,
-                        lastSeen: contact.lastSeen
-                    };
-                    this.users.set(user.id, user);
-                });
-
-                // Créer des chats de démonstration
-                const demoChats = [
-                    {
-                        id: 'chat_1',
-                        participants: ['user_1', 'contact_1'],
-                        isGroup: false,
-                        lastMessage: 'À tout à l\'heure !',
-                        lastMessageAt: Date.now() - 3600000,
-                        createdAt: Date.now() - 86400000,
-                        unread: {},
-                        pinned: true
-                    },
-                    {
-                        id: 'chat_2',
-                        participants: ['user_1', 'contact_2'],
-                        isGroup: false,
-                        lastMessage: 'Je t\'envoie les fichiers',
-                        lastMessageAt: Date.now() - 7200000,
-                        createdAt: Date.now() - 172800000,
-                        unread: { user_1: 2 },
-                        pinned: false
-                    },
-                    {
-                        id: 'chat_3',
-                        participants: ['user_1', 'contact_3'],
-                        isGroup: false,
-                        lastMessage: 'On se voit demain ?',
-                        lastMessageAt: Date.now() - 10800000,
-                        createdAt: Date.now() - 259200000,
-                        unread: {},
-                        pinned: false
-                    }
-                ];
-
-                demoChats.forEach(chat => {
-                    this.chats.set(chat.id, chat);
-                    // Créer des messages de démonstration
-                    const messages = [
-                        {
-                            id: `msg_${chat.id}_1`,
-                            chatId: chat.id,
-                            senderId: chat.participants[1],
-                            text: 'Bonjour ! Comment vas-tu ?',
-                            type: 'text',
-                            timestamp: chat.createdAt,
-                            status: 'read',
-                            readBy: chat.participants
-                        },
-                        {
-                            id: `msg_${chat.id}_2`,
-                            chatId: chat.id,
-                            senderId: 'user_1',
-                            text: 'Ça va bien merci ! Et toi ?',
-                            type: 'text',
-                            timestamp: chat.createdAt + 60000,
-                            status: 'read',
-                            readBy: chat.participants
-                        },
-                        {
-                            id: `msg_${chat.id}_3`,
-                            chatId: chat.id,
-                            senderId: chat.participants[1],
-                            text: chat.lastMessage,
-                            type: 'text',
-                            timestamp: chat.lastMessageAt,
-                            status: 'delivered',
-                            readBy: ['user_1']
-                        }
-                    ];
-                    this.messages.set(chat.id, messages);
-                });
-
+            initializeEmptyData() {
+                this.chats = new Map();
+                this.messages = new Map();
+                this.contacts = new Map();
                 this.saveData();
-                console.log('✅ Données de démonstration créées');
             }
 
-            // ===== AUTHENTICATION =====
+            // ===== AUTHENTIFICATION =====
             checkAuth() {
                 const session = localStorage.getItem('fluxio_session');
                 if (session) {
                     try {
-                        const { userId } = JSON.parse(session);
+                        const { userId, lastLogin } = JSON.parse(session);
                         const user = this.users.get(userId);
+                        
                         if (user) {
                             this.currentUser = user;
+                            user.lastLogin = lastLogin;
+                            user.isOnline = true;
                             this.showApp();
                             return true;
                         }
@@ -2365,6 +2446,7 @@
                     return false;
                 }
 
+                // Rechercher l'utilisateur
                 const user = Array.from(this.users.values()).find(u => 
                     u.email.toLowerCase() === email.toLowerCase()
                 );
@@ -2374,26 +2456,69 @@
                     return false;
                 }
                 
+                // Vérifier le mot de passe
                 if (user.password !== password) {
                     this.showNotification('Mot de passe incorrect', 'error');
                     return false;
                 }
                 
+                // Mettre à jour l'utilisateur
                 this.currentUser = user;
                 user.isOnline = true;
+                user.lastLogin = Date.now();
                 user.lastSeen = Date.now();
                 this.users.set(user.id, user);
                 
+                // Sauvegarder la session
                 localStorage.setItem('fluxio_session', JSON.stringify({
                     userId: user.id,
-                    token: this.generateToken(),
-                    lastLogin: Date.now()
+                    lastLogin: user.lastLogin,
+                    token: this.generateToken()
                 }));
                 
-                this.saveData();
+                // Charger les données de l'utilisateur
+                this.loadUserData();
+                
                 this.showApp();
                 this.showNotification(`Bienvenue ${user.name} !`, 'success');
                 return true;
+            }
+
+            loadUserData() {
+                try {
+                    const userDataKey = `fluxio_user_${this.currentUser.id}`;
+                    const userData = localStorage.getItem(userDataKey);
+                    
+                    if (userData) {
+                        const data = JSON.parse(userData);
+                        this.chats = new Map(data.chats || []);
+                        this.messages = new Map(data.messages || []);
+                        this.contacts = new Map(data.contacts || []);
+                    } else {
+                        this.initializeEmptyData();
+                    }
+                } catch (e) {
+                    console.error('Erreur chargement données:', e);
+                    this.initializeEmptyData();
+                }
+            }
+
+            saveUserData() {
+                if (!this.currentUser) return;
+                
+                try {
+                    const userData = {
+                        chats: Array.from(this.chats.entries()),
+                        messages: Array.from(this.messages.entries()),
+                        contacts: Array.from(this.contacts.entries()),
+                        lastSync: Date.now()
+                    };
+                    
+                    const userDataKey = `fluxio_user_${this.currentUser.id}`;
+                    localStorage.setItem(userDataKey, JSON.stringify(userData));
+                } catch (e) {
+                    console.error('Erreur sauvegarde données:', e);
+                }
             }
 
             async register(name, email, password) {
@@ -2402,66 +2527,69 @@
                     return false;
                 }
 
+                // Validation de l'email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    this.showNotification('Format d\'email invalide', 'error');
+                    return false;
+                }
+
+                // Validation du mot de passe
                 if (password.length < 8) {
                     this.showNotification('Le mot de passe doit contenir au moins 8 caractères', 'error');
                     return false;
                 }
 
+                // Vérifier si l'email existe déjà
                 if (Array.from(this.users.values()).some(u => u.email.toLowerCase() === email.toLowerCase())) {
                     this.showNotification('Email déjà utilisé', 'error');
                     return false;
                 }
                 
+                // Créer le nouvel utilisateur
                 const user = {
-                    id: `user_${Date.now()}`,
+                    id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                     name: name.trim(),
                     email: email.toLowerCase(),
                     password: password,
                     avatarColor: this.getRandomColor(),
                     status: 'En ligne',
                     isOnline: true,
+                    createdAt: Date.now(),
+                    lastLogin: Date.now(),
                     lastSeen: Date.now(),
                     settings: {
                         theme: 'dark',
                         notifications: true,
                         sounds: true,
-                        disappearingMessages: 0
+                        disappearingMessages: 0,
+                        showOnlineStatus: true
+                    },
+                    stats: {
+                        messagesSent: 0,
+                        chatsCreated: 0,
+                        contactsCount: 0
                     }
                 };
                 
+                // Sauvegarder l'utilisateur
                 this.users.set(user.id, user);
                 this.currentUser = user;
                 
+                // Sauvegarder la session
                 localStorage.setItem('fluxio_session', JSON.stringify({
                     userId: user.id,
-                    token: this.generateToken(),
-                    lastLogin: Date.now()
+                    lastLogin: user.lastLogin,
+                    token: this.generateToken()
                 }));
                 
-                // Créer des contacts automatiquement
-                this.createSampleContactsForUser(user.id);
+                // Initialiser les données vides
+                this.initializeEmptyData();
+                this.saveUserData();
                 
-                this.saveData();
                 this.showApp();
                 this.showNotification('Compte créé avec succès !', 'success');
                 return true;
-            }
-
-            createSampleContactsForUser(userId) {
-                Array.from(this.users.values()).forEach(existingUser => {
-                    if (existingUser.id !== userId) {
-                        const contact = {
-                            id: existingUser.id,
-                            name: existingUser.name,
-                            email: existingUser.email,
-                            status: existingUser.status,
-                            isOnline: existingUser.isOnline,
-                            avatarColor: existingUser.avatarColor,
-                            lastSeen: existingUser.lastSeen
-                        };
-                        this.contacts.set(contact.id, contact);
-                    }
-                });
             }
 
             logout() {
@@ -2470,36 +2598,32 @@
                         this.currentUser.isOnline = false;
                         this.currentUser.lastSeen = Date.now();
                         this.users.set(this.currentUser.id, this.currentUser);
-                        this.saveData();
+                        this.saveUserData();
                     }
                     localStorage.removeItem('fluxio_session');
                     location.reload();
                 }
             }
 
-            // ===== APPLICATION UI =====
+            // ===== INTERFACE UTILISATEUR =====
             showApp() {
                 document.getElementById('auth').style.display = 'none';
                 document.getElementById('app').style.display = 'block';
                 this.updateUI();
                 this.loadChats();
                 this.setupAppListeners();
+                this.updateStorageInfo();
             }
 
             setupAppListeners() {
-                // Prévenir le zoom sur les inputs mobiles
-                document.addEventListener('touchstart', (e) => {
-                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-                        e.target.style.fontSize = '16px';
-                    }
-                }, { passive: true });
-
-                // Empêcher le clic long sur les boutons
-                document.addEventListener('contextmenu', (e) => {
-                    if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
-                        e.preventDefault();
-                    }
-                });
+                // Prévenir le zoom sur mobile
+                if (this.isMobile) {
+                    document.addEventListener('touchstart', (e) => {
+                        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+                            e.target.style.fontSize = '16px';
+                        }
+                    }, { passive: true });
+                }
 
                 // Gestion du clavier virtuel
                 window.addEventListener('resize', () => {
@@ -2508,12 +2632,8 @@
             }
 
             handleKeyboard() {
-                const isPortrait = window.innerHeight > window.innerWidth;
-                const keyboardHeight = isPortrait ? 300 : 150;
-                
-                if (document.activeElement.tagName === 'TEXTAREA' || 
-                    document.activeElement.tagName === 'INPUT') {
-                    // Ajuster le scroll pour les champs de saisie
+                if (this.isMobile && (document.activeElement.tagName === 'TEXTAREA' || 
+                    document.activeElement.tagName === 'INPUT')) {
                     setTimeout(() => {
                         document.activeElement.scrollIntoView({ 
                             behavior: 'smooth', 
@@ -2526,7 +2646,7 @@
             updateUI() {
                 if (!this.currentUser) return;
 
-                // Mettre à jour le profil
+                // Mettre à jour le profil dans la sidebar
                 document.getElementById('user-name').textContent = this.currentUser.name;
                 const avatar = document.getElementById('user-avatar');
                 avatar.textContent = this.getInitials(this.currentUser.name);
@@ -2535,7 +2655,7 @@
                 // Appliquer le thème
                 this.applyTheme(this.currentUser.settings?.theme || 'dark');
                 
-                // Mettre à jour le statut
+                // Mettre à jour le statut de connexion
                 this.updateConnectionStatus(navigator.onLine);
             }
 
@@ -2548,7 +2668,127 @@
                 }
             }
 
-            // ===== CHAT MANAGEMENT =====
+            // ===== GESTION DES CONTACTS =====
+            showContacts() {
+                this.loadContactsList('contacts-management-list');
+                this.showModal('contacts-modal');
+            }
+
+            loadContactsList(containerId) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+
+                if (this.contacts.size === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📇</div>
+                            <div class="empty-state-title">Aucun contact</div>
+                            <div class="empty-state-description">Ajoutez vos premiers contacts pour commencer à discuter</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = Array.from(this.contacts.values()).map(contact => {
+                    const user = this.users.get(contact.id);
+                    const isOnline = user?.isOnline || false;
+                    const status = user?.status || 'Inconnu';
+                    
+                    return `
+                        <div class="contact-item">
+                            <div class="contact-avatar" style="background: ${contact.avatarColor || this.getRandomColor()}">
+                                ${this.getInitials(contact.name)}
+                                ${isOnline ? '<div class="online-dot"></div>' : ''}
+                            </div>
+                            <div class="contact-info">
+                                <div class="contact-name">${contact.name}</div>
+                                <div class="contact-email">${contact.email || 'Email non disponible'}</div>
+                            </div>
+                            <div class="contact-actions">
+                                <button class="contact-btn" onclick="app.startChatWith('${contact.id}')" title="Message">
+                                    💬
+                                </button>
+                                <button class="contact-btn" onclick="app.removeContact('${contact.id}')" title="Supprimer">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            addContact() {
+                const email = document.getElementById('contact-email').value.trim();
+                const name = document.getElementById('contact-name').value.trim();
+
+                if (!email) {
+                    this.showNotification('Veuillez entrer un email', 'error');
+                    return;
+                }
+
+                // Vérifier si c'est l'utilisateur courant
+                if (email.toLowerCase() === this.currentUser.email.toLowerCase()) {
+                    this.showNotification('Vous ne pouvez pas vous ajouter vous-même', 'error');
+                    return;
+                }
+
+                // Vérifier si le contact existe déjà
+                if (Array.from(this.contacts.values()).some(c => c.email?.toLowerCase() === email.toLowerCase())) {
+                    this.showNotification('Ce contact existe déjà', 'error');
+                    return;
+                }
+
+                // Rechercher l'utilisateur dans la base
+                const existingUser = Array.from(this.users.values()).find(u => 
+                    u.email.toLowerCase() === email.toLowerCase()
+                );
+
+                if (existingUser) {
+                    // L'utilisateur existe, l'ajouter comme contact
+                    const contact = {
+                        id: existingUser.id,
+                        name: name || existingUser.name,
+                        email: existingUser.email,
+                        avatarColor: existingUser.avatarColor,
+                        addedAt: Date.now()
+                    };
+                    
+                    this.contacts.set(contact.id, contact);
+                    this.saveUserData();
+                    
+                    // Mettre à jour les statistiques
+                    if (this.currentUser.stats) {
+                        this.currentUser.stats.contactsCount = this.contacts.size;
+                    }
+                    
+                    this.showNotification(`Contact ajouté : ${contact.name}`, 'success');
+                    this.loadContactsList('contacts-management-list');
+                    
+                    // Réinitialiser les champs
+                    document.getElementById('contact-email').value = '';
+                    document.getElementById('contact-name').value = '';
+                } else {
+                    // L'utilisateur n'existe pas encore
+                    this.showNotification('Utilisateur non trouvé. Il doit créer un compte Fluxio Pro d\'abord.', 'info');
+                }
+            }
+
+            removeContact(contactId) {
+                if (confirm('Supprimer ce contact ?')) {
+                    this.contacts.delete(contactId);
+                    this.saveUserData();
+                    
+                    // Mettre à jour les statistiques
+                    if (this.currentUser.stats) {
+                        this.currentUser.stats.contactsCount = this.contacts.size;
+                    }
+                    
+                    this.showNotification('Contact supprimé', 'success');
+                    this.loadContactsList('contacts-management-list');
+                }
+            }
+
+            // ===== GESTION DES CONVERSATIONS =====
             loadChats() {
                 const container = document.getElementById('chats-list');
                 if (!this.currentUser) return;
@@ -2561,11 +2801,11 @@
 
                 if (userChats.length === 0) {
                     container.innerHTML = `
-                        <div style="text-align: center; padding: 40px 20px; color: var(--text-2)">
-                            <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.3">💬</div>
-                            <div style="font-size: 16px; margin-bottom: 8px; font-weight: 600">Aucune conversation</div>
-                            <div style="font-size: 14px; margin-bottom: 24px">Commencez une nouvelle discussion !</div>
-                            <button onclick="app.showNewChat()" style="padding: 12px 24px; background: var(--gradient); border: none; border-radius: var(--radius); color: white; font-weight: 600; font-size: 14px; touch-action: manipulation;">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💬</div>
+                            <div class="empty-state-title">Aucune conversation</div>
+                            <div class="empty-state-description">Commencez une nouvelle discussion avec vos contacts !</div>
+                            <button class="empty-state-action" onclick="app.showNewChat()">
                                 Nouveau chat
                             </button>
                         </div>
@@ -2581,7 +2821,7 @@
                     const unreadCount = chat.unread?.[this.currentUser.id] || 0;
                     const isActive = this.currentChat?.id === chat.id;
                     
-                    const name = otherUser?.name || 'Utilisateur';
+                    const name = otherUser?.name || 'Utilisateur inconnu';
                     const avatarText = this.getInitials(name);
                     const avatarColor = otherUser?.avatarColor || '#666';
                     const time = this.formatTime(chat.lastMessageAt);
@@ -2618,7 +2858,7 @@
                 if (chat.unread?.[this.currentUser.id]) {
                     delete chat.unread[this.currentUser.id];
                     this.chats.set(chatId, chat);
-                    this.saveData();
+                    this.saveUserData();
                 }
 
                 this.showChatWindow();
@@ -2626,7 +2866,7 @@
                 this.loadMessages();
                 this.loadChats();
                 
-                // Vibration sur mobile si supporté
+                // Vibration sur mobile
                 if (navigator.vibrate && this.isMobile) {
                     navigator.vibrate(50);
                 }
@@ -2676,19 +2916,101 @@
                 const otherUserId = chat.participants.find(id => id !== this.currentUser.id);
                 const otherUser = this.users.get(otherUserId) || this.contacts.get(otherUserId);
                 
-                const name = otherUser?.name || 'Utilisateur';
+                const name = otherUser?.name || 'Utilisateur inconnu';
                 const avatarText = this.getInitials(name);
                 const avatarColor = otherUser?.avatarColor || '#666';
-                const status = otherUser?.status || 'En ligne';
-                const lastSeen = otherUser?.lastSeen ? `Vu ${this.formatTime(otherUser.lastSeen, true)}` : '';
+                const status = otherUser?.isOnline ? (otherUser?.status || 'En ligne') : 'Hors ligne';
 
                 document.getElementById('chat-user-name').textContent = name;
-                const statusElement = document.getElementById('chat-user-status');
-                statusElement.querySelector('span').textContent = otherUser?.isOnline ? status : lastSeen;
+                document.getElementById('chat-user-status').querySelector('span').textContent = status;
                 
                 const avatar = document.getElementById('chat-user-avatar');
                 avatar.textContent = avatarText;
                 avatar.style.background = avatarColor;
+            }
+
+            // ===== NOUVELLE CONVERSATION =====
+            showNewChat() {
+                this.loadContactsList('contacts-list');
+                this.showModal('new-chat-modal');
+            }
+
+            searchUser() {
+                const searchTerm = document.getElementById('search-user').value.trim();
+                
+                if (!searchTerm) {
+                    this.showNotification('Veuillez entrer un email ou un nom', 'error');
+                    return;
+                }
+
+                // Rechercher dans les utilisateurs existants
+                const foundUser = Array.from(this.users.values()).find(user => 
+                    user.email.toLowerCase() === searchTerm.toLowerCase() ||
+                    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+
+                if (foundUser && foundUser.id !== this.currentUser.id) {
+                    // Vérifier si c'est déjà un contact
+                    const isAlreadyContact = this.contacts.has(foundUser.id);
+                    
+                    if (!isAlreadyContact) {
+                        // Demander si on veut ajouter comme contact
+                        if (confirm(`Ajouter ${foundUser.name} à vos contacts ?`)) {
+                            const contact = {
+                                id: foundUser.id,
+                                name: foundUser.name,
+                                email: foundUser.email,
+                                avatarColor: foundUser.avatarColor,
+                                addedAt: Date.now()
+                            };
+                            
+                            this.contacts.set(contact.id, contact);
+                            this.saveUserData();
+                            this.showNotification('Contact ajouté', 'success');
+                        }
+                    }
+                    
+                    // Démarrer une conversation
+                    this.startChatWith(foundUser.id);
+                    this.hideModal('new-chat-modal');
+                } else {
+                    this.showNotification('Utilisateur non trouvé', 'error');
+                }
+            }
+
+            startChatWith(userId) {
+                // Vérifier si une conversation existe déjà
+                const existingChat = Array.from(this.chats.values()).find(chat => 
+                    !chat.isGroup && 
+                    chat.participants.includes(this.currentUser.id) && 
+                    chat.participants.includes(userId)
+                );
+
+                if (existingChat) {
+                    this.openChat(existingChat.id);
+                } else {
+                    // Créer une nouvelle conversation
+                    const chat = {
+                        id: `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                        participants: [this.currentUser.id, userId],
+                        isGroup: false,
+                        lastMessage: '',
+                        lastMessageAt: Date.now(),
+                        createdAt: Date.now(),
+                        unread: {}
+                    };
+                    
+                    this.chats.set(chat.id, chat);
+                    this.messages.set(chat.id, []);
+                    
+                    // Mettre à jour les statistiques
+                    if (this.currentUser.stats) {
+                        this.currentUser.stats.chatsCreated = (this.currentUser.stats.chatsCreated || 0) + 1;
+                    }
+                    
+                    this.saveUserData();
+                    this.openChat(chat.id);
+                }
             }
 
             // ===== MESSAGES =====
@@ -2696,10 +3018,10 @@
                 const container = document.getElementById('messages-container');
                 if (!this.currentChat) {
                     container.innerHTML = `
-                        <div style="text-align: center; padding: 40px 20px; color: var(--text-2)">
-                            <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.3">✉️</div>
-                            <div style="font-size: 16px; margin-bottom: 8px; font-weight: 600">Sélectionnez une conversation</div>
-                            <div style="font-size: 14px">Commencez à discuter !</div>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">✉️</div>
+                            <div class="empty-state-title">Sélectionnez une conversation</div>
+                            <div class="empty-state-description">Choisissez une conversation ou démarrez-en une nouvelle</div>
                         </div>
                     `;
                     return;
@@ -2709,10 +3031,10 @@
                 
                 if (messages.length === 0) {
                     container.innerHTML = `
-                        <div style="text-align: center; padding: 40px 20px; color: var(--text-2)">
-                            <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.3">💭</div>
-                            <div style="font-size: 16px; margin-bottom: 8px; font-weight: 600">Aucun message</div>
-                            <div style="font-size: 14px">Envoyez le premier message !</div>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💭</div>
+                            <div class="empty-state-title">Aucun message</div>
+                            <div class="empty-state-description">Envoyez le premier message pour démarrer la conversation</div>
                         </div>
                     `;
                     return;
@@ -2764,7 +3086,7 @@
                 
                 if (!text || !this.currentChat || !this.currentUser) return;
 
-                // Vibration sur envoi
+                // Vibration sur mobile
                 if (navigator.vibrate && this.isMobile) {
                     navigator.vibrate(10);
                 }
@@ -2784,7 +3106,7 @@
                 chatMessages.push(message);
                 this.messages.set(this.currentChat.id, chatMessages);
 
-                // Mettre à jour le chat
+                // Mettre à jour la conversation
                 const chat = this.chats.get(this.currentChat.id);
                 chat.lastMessage = text;
                 chat.lastMessageAt = message.timestamp;
@@ -2799,147 +3121,29 @@
                 
                 this.chats.set(this.currentChat.id, chat);
 
-                this.saveData();
+                // Mettre à jour les statistiques
+                if (this.currentUser.stats) {
+                    this.currentUser.stats.messagesSent = (this.currentUser.stats.messagesSent || 0) + 1;
+                }
+
+                this.saveUserData();
                 this.loadMessages();
                 this.loadChats();
                 
                 input.value = '';
                 this.autoResizeTextarea(input);
-                
-                // Réponse automatique pour la démo
-                if (chat.participants.length === 2) {
-                    setTimeout(() => {
-                        this.sendAutoReply(chat);
-                    }, 1000 + Math.random() * 2000);
-                }
-            }
-
-            sendAutoReply(chat) {
-                const otherUserId = chat.participants.find(id => id !== this.currentUser.id);
-                if (!otherUserId) return;
-
-                const replies = [
-                    "Salut ! Comment ça va ? 😊",
-                    "Je viens de voir ton message !",
-                    "Intéressant, continue !",
-                    "Je suis d'accord avec toi 👍",
-                    "À quelle heure on se voit ?",
-                    "Merci pour l'information !",
-                    "Parfait, c'est noté 📝",
-                    "On en parle plus tard ?",
-                    "Super idée ! 💡",
-                    "À bientôt ! 👋"
-                ];
-
-                const reply = replies[Math.floor(Math.random() * replies.length)];
-                const message = {
-                    id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                    chatId: chat.id,
-                    senderId: otherUserId,
-                    text: reply,
-                    type: 'text',
-                    timestamp: Date.now(),
-                    status: 'received',
-                    readBy: [otherUserId]
-                };
-
-                const chatMessages = this.messages.get(chat.id) || [];
-                chatMessages.push(message);
-                this.messages.set(chat.id, chatMessages);
-
-                chat.lastMessage = reply;
-                chat.lastMessageAt = message.timestamp;
-                this.chats.set(chat.id, chat);
-
-                this.saveData();
-                
-                if (this.currentChat?.id === chat.id) {
-                    this.loadMessages();
-                }
-                
-                this.loadChats();
-                
-                // Notification
-                const otherUser = this.users.get(otherUserId);
-                if (otherUser) {
-                    this.showNotification('Nouveau message', `${otherUser.name}: ${reply.substring(0, 30)}...`, 'info');
-                    
-                    // Vibration pour notification
-                    if (navigator.vibrate && this.isMobile) {
-                        navigator.vibrate([100, 50, 100]);
-                    }
-                }
             }
 
             // ===== MODALS =====
-            showNewChat() {
-                const contacts = Array.from(this.contacts.values())
-                    .filter(contact => contact.id !== this.currentUser.id)
-                    .sort((a, b) => a.name.localeCompare(b.name));
-                
-                const container = document.getElementById('contacts-list');
-                container.innerHTML = contacts.map(contact => `
-                    <div class="chat-item" onclick="app.startChatWith('${contact.id}')" style="margin-bottom: 8px;" data-contact-id="${contact.id}">
-                        <div class="chat-avatar" style="background: ${contact.avatarColor}">
-                            ${this.getInitials(contact.name)}
-                            ${contact.isOnline ? '<div class="online-dot"></div>' : ''}
-                        </div>
-                        <div class="chat-info">
-                            <div class="chat-header">
-                                <div class="chat-name">${contact.name}</div>
-                            </div>
-                            <div class="chat-preview">
-                                <div class="chat-message">${contact.status}</div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                
-                this.showModal('new-chat-modal');
-                
-                // Focus sur la recherche
-                setTimeout(() => {
-                    const search = document.getElementById('search-contacts');
-                    if (search) search.focus();
-                }, 300);
-            }
-
-            startChatWith(contactId) {
-                const existingChat = Array.from(this.chats.values()).find(chat => 
-                    !chat.isGroup && 
-                    chat.participants.includes(this.currentUser.id) && 
-                    chat.participants.includes(contactId)
-                );
-
-                if (existingChat) {
-                    this.openChat(existingChat.id);
-                } else {
-                    const chat = {
-                        id: `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                        participants: [this.currentUser.id, contactId],
-                        isGroup: false,
-                        lastMessage: '',
-                        lastMessageAt: Date.now(),
-                        createdAt: Date.now(),
-                        unread: {}
-                    };
-                    
-                    this.chats.set(chat.id, chat);
-                    this.messages.set(chat.id, []);
-                    this.saveData();
-                    this.openChat(chat.id);
-                }
-
-                this.hideModal('new-chat-modal');
-            }
-
             showSettings() {
                 if (!this.currentUser) return;
                 
                 document.getElementById('settings-name').value = this.currentUser.name;
                 document.getElementById('settings-status').value = this.currentUser.status || '';
+                document.getElementById('settings-email').textContent = this.currentUser.email;
                 document.getElementById('notifications-toggle').checked = this.currentUser.settings?.notifications ?? true;
                 document.getElementById('sounds-toggle').checked = this.currentUser.settings?.sounds ?? true;
+                document.getElementById('online-status-toggle').checked = this.currentUser.settings?.showOnlineStatus ?? true;
                 document.getElementById('disappearing-messages').value = this.currentUser.settings?.disappearingMessages || 0;
                 document.getElementById('theme-select').value = this.currentUser.settings?.theme || 'dark';
                 
@@ -2963,6 +3167,7 @@
                 this.currentUser.settings = {
                     notifications: document.getElementById('notifications-toggle').checked,
                     sounds: document.getElementById('sounds-toggle').checked,
+                    showOnlineStatus: document.getElementById('online-status-toggle').checked,
                     disappearingMessages: parseInt(document.getElementById('disappearing-messages').value),
                     theme: document.getElementById('theme-select').value
                 };
@@ -2972,6 +3177,26 @@
                 this.updateUI();
                 this.hideModal('settings-modal');
                 this.showNotification('Paramètres enregistrés', 'success');
+            }
+
+            showProfile() {
+                if (!this.currentUser) return;
+                
+                document.getElementById('profile-name').textContent = this.currentUser.name;
+                document.getElementById('profile-email').textContent = this.currentUser.email;
+                document.getElementById('profile-status').textContent = this.currentUser.status || 'En ligne';
+                document.getElementById('profile-user-id').textContent = this.currentUser.id.substring(0, 12) + '...';
+                document.getElementById('profile-messages-count').textContent = this.currentUser.stats?.messagesSent || 0;
+                document.getElementById('profile-chats-count').textContent = this.chats.size;
+                document.getElementById('profile-contacts-count').textContent = this.contacts.size;
+                document.getElementById('profile-join-date').textContent = this.formatTime(this.currentUser.createdAt);
+                document.getElementById('profile-last-login').textContent = this.formatTime(this.currentUser.lastLogin);
+                
+                const avatar = document.getElementById('profile-avatar');
+                avatar.textContent = this.getInitials(this.currentUser.name);
+                avatar.style.background = this.currentUser.avatarColor;
+                
+                this.showModal('profile-modal');
             }
 
             showModal(id) {
@@ -2992,7 +3217,7 @@
                 }, 100);
             }
 
-            // ===== CALLS =====
+            // ===== APPELS =====
             async startVoiceCall() {
                 if (!this.currentChat) return;
                 
@@ -3027,7 +3252,7 @@
                     
                 } catch (error) {
                     console.error('Erreur microphone:', error);
-                    this.showNotification('Impossible d\'accéder au microphone', 'error');
+                    this.showNotification('Impossible d\'accéder au microphone. Vérifiez les permissions.', 'error');
                 }
             }
 
@@ -3067,11 +3292,6 @@
                     this.showCallInterface('video');
                     this.startCallTimer();
                     
-                    // Simuler la vidéo distante
-                    setTimeout(() => {
-                        this.simulateRemoteVideo();
-                    }, 1000);
-                    
                     // Vibration
                     if (navigator.vibrate) {
                         navigator.vibrate([200, 100, 200, 100, 200]);
@@ -3079,7 +3299,7 @@
                     
                 } catch (error) {
                     console.error('Erreur caméra:', error);
-                    this.showNotification('Impossible d\'accéder à la caméra', 'error');
+                    this.showNotification('Impossible d\'accéder à la caméra. Vérifiez les permissions.', 'error');
                 }
             }
 
@@ -3105,7 +3325,7 @@
                 document.getElementById('sidebar').classList.remove('active');
                 document.getElementById('chat-window').classList.remove('active');
                 
-                // Empêcher le verrouillage de l'écran pendant l'appel
+                // Empêcher le verrouillage de l'écran
                 this.preventScreenLock();
             }
 
@@ -3187,19 +3407,6 @@
                 }, 1000);
             }
 
-            simulateRemoteVideo() {
-                const remoteVideo = document.getElementById('remote-video');
-                // Pour la démo, on utilise une couleur de fond
-                remoteVideo.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-                remoteVideo.style.display = 'flex';
-                remoteVideo.style.alignItems = 'center';
-                remoteVideo.style.justifyContent = 'center';
-                remoteVideo.style.color = 'white';
-                remoteVideo.style.fontSize = '24px';
-                remoteVideo.style.fontWeight = 'bold';
-                remoteVideo.innerHTML = 'VIDÉO<br>DISTANTE';
-            }
-
             preventScreenLock() {
                 if ('wakeLock' in navigator) {
                     navigator.wakeLock.request('screen').then(wakeLock => {
@@ -3215,7 +3422,7 @@
                 }
             }
 
-            // ===== VOICE RECORDING =====
+            // ===== ENREGISTREMENT VOCAL =====
             async toggleVoiceRecording() {
                 if (!this.isRecording) {
                     await this.startVoiceRecording();
@@ -3256,7 +3463,7 @@
                     btn.style.background = 'var(--danger)';
                     btn.style.color = 'white';
                     
-                    this.showNotification('Enregistrement en cours...', 'info');
+                    this.showNotification('Enregistrement en cours... Parlez maintenant.', 'info');
                     
                 } catch (error) {
                     console.error('Erreur enregistrement:', error);
@@ -3274,8 +3481,6 @@
                     btn.innerHTML = '<span>🎤</span>';
                     btn.style.background = '';
                     btn.style.color = '';
-                    
-                    this.showNotification('Message vocal envoyé', 'success');
                 }
             }
 
@@ -3288,7 +3493,7 @@
                     senderId: this.currentUser.id,
                     type: 'voice',
                     audioUrl: URL.createObjectURL(audioBlob),
-                    duration: 5, // Durée en secondes
+                    duration: Math.floor(audioBlob.size / 1000), // Estimation de durée
                     timestamp: Date.now(),
                     status: 'sent',
                     readBy: [this.currentUser.id]
@@ -3303,18 +3508,27 @@
                 chat.lastMessageAt = message.timestamp;
                 this.chats.set(this.currentChat.id, chat);
 
-                this.saveData();
+                // Mettre à jour les statistiques
+                if (this.currentUser.stats) {
+                    this.currentUser.stats.messagesSent = (this.currentUser.stats.messagesSent || 0) + 1;
+                }
+
+                this.saveUserData();
                 this.loadMessages();
                 this.loadChats();
+                
+                this.showNotification('Message vocal envoyé', 'success');
             }
 
-            // ===== UTILITIES =====
+            // ===== UTILITAIRES =====
             getInitials(name) {
                 if (!name) return '??';
                 return name.split(' ').map(w => w[0]).join('').toUpperCase().substring(0, 2);
             }
 
             formatTime(timestamp, showSeconds = false) {
+                if (!timestamp) return 'Jamais';
+                
                 const date = new Date(timestamp);
                 const now = new Date();
                 const diff = now - date;
@@ -3330,9 +3544,9 @@
                 }
                 if (diff < 604800000) {
                     const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-                    return days[date.getDay()];
+                    return `${days[date.getDay()]} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
                 }
-                return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+                return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
             }
 
             escapeHtml(text) {
@@ -3347,7 +3561,9 @@
             }
 
             generateToken() {
-                return Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+                return Array.from(crypto.getRandomValues(new Uint8Array(32)))
+                    .map(b => b.toString(16).padStart(2, '0'))
+                    .join('');
             }
 
             groupMessagesByDate(messages) {
@@ -3391,7 +3607,7 @@
                 
                 container.appendChild(notification);
                 
-                // Supprimer automatiquement après la durée spécifiée
+                // Supprimer automatiquement
                 setTimeout(() => {
                     if (document.getElementById(id)) {
                         notification.remove();
@@ -3399,7 +3615,7 @@
                 }, duration);
             }
 
-            // ===== EVENT LISTENERS =====
+            // ===== GESTION DES ÉVÉNEMENTS =====
             setupEventListeners() {
                 // Message input
                 const messageInput = document.getElementById('message-input');
@@ -3414,13 +3630,9 @@
                     }
                 });
 
-                // Recherche
+                // Recherche dans les chats
                 document.getElementById('search-chats').addEventListener('input', (e) => {
                     this.searchChats(e.target.value);
-                });
-
-                document.getElementById('search-contacts').addEventListener('input', (e) => {
-                    this.searchContacts(e.target.value);
                 });
 
                 // Force du mot de passe
@@ -3436,7 +3648,7 @@
                     this.handleResize();
                 });
 
-                // Connexion
+                // Connexion réseau
                 window.addEventListener('online', () => {
                     this.updateConnectionStatus(true);
                 });
@@ -3471,18 +3683,11 @@
                     }
                 });
 
-                // Gestion du swipe pour mobile
+                // Gestion des gestes swipe sur mobile
                 this.setupSwipeGestures();
 
-                // Prévenir le zoom sur iOS
-                document.addEventListener('gesturestart', (e) => {
-                    e.preventDefault();
-                });
-
-                // Optimisation pour les anciens appareils
-                if ('connection' in navigator && navigator.connection.saveData) {
-                    this.enableDataSaverMode();
-                }
+                // Optimisation des performances
+                this.setupPerformanceOptimizations();
             }
 
             setupSwipeGestures() {
@@ -3521,21 +3726,20 @@
                 }, { passive: true });
             }
 
+            setupPerformanceOptimizations() {
+                // Mode économie de données
+                if ('connection' in navigator && navigator.connection.saveData) {
+                    this.enableDataSaverMode();
+                }
+
+                // Réduction des animations si demandé
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    document.body.classList.add('reduced-motion');
+                }
+            }
+
             enableDataSaverMode() {
-                // Désactiver les animations lourdes
                 document.body.classList.add('data-saver');
-                
-                // Réduire la qualité des images
-                const style = document.createElement('style');
-                style.textContent = `
-                    .chat-avatar, .user-avatar, .call-avatar {
-                        background-size: cover !important;
-                    }
-                    * {
-                        background-image: none !important;
-                    }
-                `;
-                document.head.appendChild(style);
             }
 
             searchChats(query) {
@@ -3550,22 +3754,6 @@
                         chat.style.display = 'flex';
                     } else {
                         chat.style.display = 'none';
-                    }
-                });
-            }
-
-            searchContacts(query) {
-                const contacts = document.querySelectorAll('#contacts-list .chat-item');
-                const searchText = query.toLowerCase().trim();
-                
-                contacts.forEach(contact => {
-                    const name = contact.querySelector('.chat-name').textContent.toLowerCase();
-                    const status = contact.querySelector('.chat-message').textContent.toLowerCase();
-                    
-                    if (name.includes(searchText) || status.includes(searchText)) {
-                        contact.style.display = 'flex';
-                    } else {
-                        contact.style.display = 'none';
                     }
                 });
             }
@@ -3622,19 +3810,22 @@
                     statusElement.style.color = 'var(--success)';
                     if (dot) dot.style.background = 'var(--success)';
                     
-                    // Re-synchroniser les données
-                    this.syncData();
+                    // Mettre à jour le statut utilisateur
+                    if (this.currentUser) {
+                        this.currentUser.isOnline = true;
+                        this.currentUser.lastSeen = Date.now();
+                    }
                 } else {
                     statusElement.textContent = 'Hors ligne';
                     statusElement.style.color = 'var(--warning)';
                     if (dot) dot.style.background = 'var(--warning)';
                     this.showNotification('Vous êtes hors ligne', 'warning');
+                    
+                    // Mettre à jour le statut utilisateur
+                    if (this.currentUser) {
+                        this.currentUser.isOnline = false;
+                    }
                 }
-            }
-
-            syncData() {
-                // Pourrait être étendu pour synchroniser avec un serveur
-                console.log('Synchronisation des données...');
             }
 
             checkConnection() {
@@ -3647,7 +3838,7 @@
                 }, 30000);
             }
 
-            // ===== AUTRES FONCTIONNALITÉS =====
+            // ===== GESTION DES FICHIERS =====
             attachFile() {
                 document.getElementById('file-input').click();
                 
@@ -3655,40 +3846,69 @@
                     const files = e.target.files;
                     if (files.length > 0) {
                         this.showNotification(`${files.length} fichier(s) sélectionné(s)`, 'info');
-                        // Ici, vous pourriez uploader les fichiers
+                        // Ici, vous pourriez implémenter l'upload des fichiers
                     }
                 };
             }
 
-            showNewGroup() {
-                this.showNotification('Création de groupe - Fonctionnalité à venir', 'info');
-            }
-
-            showArchivedChats() {
-                this.showNotification('Archives - Fonctionnalité à venir', 'info');
-            }
-
-            showProfile() {
-                this.showNotification('Profil - Fonctionnalité à venir', 'info');
-            }
-
+            // ===== FONCTIONNALITÉS DIVERSES =====
             showChatInfo() {
                 if (!this.currentChat) return;
                 
                 const otherUserId = this.currentChat.participants.find(id => id !== this.currentUser.id);
                 const otherUser = this.users.get(otherUserId) || this.contacts.get(otherUserId);
                 
-                let info = `📱 Informations du contact\n\n`;
-                info += `👤 Nom: ${otherUser?.name || 'Inconnu'}\n`;
-                info += `🟢 Statut: ${otherUser?.status || 'Inconnu'}\n`;
+                let info = `📱 Informations de la conversation\n\n`;
+                info += `👤 Contact: ${otherUser?.name || 'Utilisateur inconnu'}\n`;
                 info += `📧 Email: ${otherUser?.email || 'Non disponible'}\n`;
-                info += `⏰ Dernière connexion: ${otherUser?.lastSeen ? this.formatTime(otherUser.lastSeen, true) : 'Inconnue'}\n`;
-                info += `🔒 Messages chiffrés: Oui`;
+                info += `🟢 Statut: ${otherUser?.isOnline ? 'En ligne' : 'Hors ligne'}\n`;
+                info += `💬 Messages: ${this.messages.get(this.currentChat.id)?.length || 0}\n`;
+                info += `📅 Créée: ${this.formatTime(this.currentChat.createdAt)}\n`;
+                info += `🔒 Chiffrement: Activé`;
                 
                 alert(info);
             }
 
-            // ===== GESTION DU SIDEBAR MOBILE =====
+            clearCache() {
+                if (confirm('Vider le cache ? Cela ne supprimera pas vos conversations.')) {
+                    // Sauvegarder les données importantes
+                    const importantData = {
+                        users: Array.from(this.users.entries()),
+                        currentUserId: this.currentUser?.id
+                    };
+                    
+                    // Effacer le localStorage sauf la session
+                    const session = localStorage.getItem('fluxio_session');
+                    localStorage.clear();
+                    
+                    // Restaurer les données importantes
+                    if (session) localStorage.setItem('fluxio_session', session);
+                    localStorage.setItem('fluxio_users', JSON.stringify(Array.from(importantData.users)));
+                    
+                    // Recharger les données
+                    this.loadData();
+                    this.updateStorageInfo();
+                    this.showNotification('Cache vidé', 'success');
+                }
+            }
+
+            updateStorageInfo() {
+                try {
+                    let total = 0;
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        const value = localStorage.getItem(key);
+                        total += key.length + value.length;
+                    }
+                    
+                    const sizeInKB = Math.round(total / 1024);
+                    document.getElementById('storage-used').textContent = `${sizeInKB} KB`;
+                } catch (e) {
+                    console.error('Erreur calcul stockage:', e);
+                }
+            }
+
+            // ===== GESTION DU SIDEBAR =====
             toggleSidebar() {
                 const sidebar = document.getElementById('sidebar');
                 const isActive = sidebar.classList.contains('active');
@@ -3724,7 +3944,7 @@
             app = new FluxioApp();
             window.app = app;
             
-            // Fonctions globales
+            // Fonctions globales pour l'authentification
             window.showAuthTab = (tab) => {
                 document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
                 document.getElementById('register-form').classList.toggle('hidden', tab !== 'register');
@@ -3751,29 +3971,14 @@
                 const password = document.getElementById('register-password').value;
                 const confirm = document.getElementById('register-confirm').value;
                 
-                if (!name || !email || !password || !confirm) {
-                    app.showNotification('Veuillez remplir tous les champs', 'error');
-                    return;
-                }
-                
-                if (password !== confirm) {
-                    app.showNotification('Les mots de passe ne correspondent pas', 'error');
-                    return;
-                }
-                
-                if (password.length < 8) {
-                    app.showNotification('Le mot de passe doit contenir au moins 8 caractères', 'error');
-                    return;
-                }
-                
-                app.register(name, email, password);
+                app.register(name, email, password, confirm);
             };
             
             window.toggleSidebar = () => {
                 app.toggleSidebar();
             };
             
-            console.log('📱 Fluxio Pro Mobile chargée');
+            console.log('📱 Fluxio Pro - Version Finale chargée');
             
             // Installation PWA
             if ('serviceWorker' in navigator && location.protocol === 'https:') {
@@ -3783,22 +3988,6 @@
                     });
                 });
             }
-            
-            // Beforeinstall prompt
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                
-                // Afficher un bouton d'installation
-                setTimeout(() => {
-                    app.showNotification(
-                        'Installez Fluxio Pro pour une meilleure expérience !',
-                        'info',
-                        5000
-                    );
-                }, 5000);
-            });
         });
 
         // Gestionnaire d'erreurs global
@@ -3807,7 +3996,7 @@
             app.showNotification('Une erreur est survenue', 'error');
         });
 
-        // Prévenir la fermeture accidentelle
+        // Prévenir la fermeture accidentelle pendant les appels
         window.addEventListener('beforeunload', (e) => {
             if (app.currentCall || app.isRecording) {
                 e.preventDefault();
@@ -3815,7 +4004,7 @@
             }
         });
 
-        // Gestion de la visibilité
+        // Gestion de la visibilité de l'application
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 // App en arrière-plan
