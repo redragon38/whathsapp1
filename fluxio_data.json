@@ -1,0 +1,12 @@
+{
+  "users": [],
+  "chats": [],
+  "messages": {},
+  "lastUpdate": 0,
+  "stats": {
+    "totalUsers": 0,
+    "totalChats": 0,
+    "totalMessages": 0,
+    "onlineUsers": 0
+  }
+}
