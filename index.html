@@ -258,7 +258,7 @@
             background: var(--bg-highest);
         }
 
-        /* ADD FRIEND BUTTON - NEW */
+        /* ADD FRIEND BUTTON */
         .add-friend-btn {
             position: fixed;
             bottom: 30px;
@@ -272,7 +272,7 @@
             font-size: 24px;
             box-shadow: 0 8px 32px rgba(0, 102, 255, 0.4);
             z-index: 90;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -282,18 +282,8 @@
             transform: scale(0.9);
         }
 
-        .add-friend-btn.pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 102, 255, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(0, 102, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 102, 255, 0); }
-        }
-
-        /* QUICK ADD MODAL - NEW */
-        .quick-add-modal {
+        /* SIMPLE ADD MODAL */
+        .simple-add-modal {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.8);
@@ -305,7 +295,7 @@
             backdrop-filter: blur(20px);
         }
 
-        .quick-add-modal.active {
+        .simple-add-modal.active {
             display: flex;
             animation: fadeIn 0.3s ease;
         }
@@ -315,7 +305,7 @@
             to { opacity: 1; }
         }
 
-        .quick-add-card {
+        .simple-add-card {
             background: var(--bg-elevated);
             border-radius: 20px;
             padding: 30px;
@@ -329,70 +319,129 @@
             to { transform: translateY(0); }
         }
 
-        .quick-add-title {
+        .simple-add-title {
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 8px;
             text-align: center;
         }
 
-        .quick-add-subtitle {
+        .simple-add-subtitle {
             color: var(--text-secondary);
             text-align: center;
             margin-bottom: 30px;
             font-size: 15px;
         }
 
-        /* ADD FRIEND METHODS - NEW */
-        .add-methods {
+        /* TWO CHOICES LAYOUT */
+        .choices-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (min-width: 480px) {
+            .choices-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .choice-card {
+            background: var(--bg-high);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.2s;
+            border: 2px solid transparent;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-        }
-
-        .method-btn {
-            display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 20px;
-            background: var(--bg-high);
-            border: none;
-            border-radius: 16px;
-            color: var(--text);
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.2s;
+            justify-content: center;
+            min-height: 180px;
         }
 
-        .method-btn:active {
+        .choice-card:active {
             background: var(--bg-highest);
+            border-color: var(--primary);
         }
 
-        .method-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--primary);
-            border-radius: 12px;
+        .choice-card.selected {
+            background: var(--bg-highest);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        .choice-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 28px;
             color: white;
-            flex-shrink: 0;
+            margin-bottom: 16px;
         }
 
-        .method-text {
-            flex: 1;
-            text-align: left;
+        .choice-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
-        .method-desc {
-            font-size: 13px;
+        .choice-desc {
+            font-size: 14px;
             color: var(--text-secondary);
-            margin-top: 4px;
         }
 
-        /* QR CODE SCANNER - NEW */
+        /* EMAIL INPUT FORM */
+        .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .email-input-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .email-input {
+            flex: 1;
+            height: 56px;
+            padding: 0 20px;
+            background: var(--bg-high);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 16px;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .send-btn {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .send-btn:active {
+            opacity: 0.9;
+            transform: scale(0.95);
+        }
+
+        /* QR CODE SCANNER */
         .qr-scanner {
             position: fixed;
             inset: 0;
@@ -458,6 +507,60 @@
             border-left: none;
             border-top: none;
             border-radius: 0 0 20px 0;
+        }
+
+        /* MY QR CODE */
+        .my-qr-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+        }
+
+        .my-qr-modal.active {
+            display: flex;
+        }
+
+        .my-qr-card {
+            background: var(--bg-elevated);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+        }
+
+        .qr-code-container {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 12px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .user-info {
+            margin-bottom: 24px;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: var(--text-secondary);
         }
 
         /* SIDEBAR */
@@ -557,17 +660,32 @@
             text-align: center;
         }
 
-        /* CONTACTS LIST - IMPROVED */
+        /* CONTACTS LIST */
         .contacts-section {
             padding: 20px;
         }
 
         .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title-text {
             font-size: 14px;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 16px;
+        }
+
+        .show-qr-btn {
+            padding: 8px 16px;
+            background: var(--bg-high);
+            color: var(--text);
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
         }
 
         .contacts-list {
@@ -612,7 +730,7 @@
             margin-bottom: 4px;
         }
 
-        .contact-mutual {
+        .contact-email {
             font-size: 13px;
             color: var(--text-secondary);
         }
@@ -632,11 +750,6 @@
             justify-content: center;
             font-size: 18px;
             transition: all 0.2s;
-        }
-
-        .add-btn {
-            background: var(--primary);
-            color: white;
         }
 
         .chat-btn {
@@ -709,63 +822,6 @@
             text-overflow: ellipsis;
         }
 
-        /* FRIEND SUGGESTIONS - NEW */
-        .suggestions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 16px;
-            padding: 20px;
-        }
-
-        .suggestion-card {
-            background: var(--bg-high);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .suggestion-card:active {
-            background: var(--bg-highest);
-            transform: scale(0.98);
-        }
-
-        .suggestion-avatar {
-            width: 64px;
-            height: 64px;
-            background: var(--primary);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0 auto 16px;
-        }
-
-        .suggestion-name {
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .suggestion-mutual {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-
-        .suggestion-add-btn {
-            width: 100%;
-            padding: 10px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
         /* NOTIFICATIONS */
         .notification {
             position: fixed;
@@ -817,13 +873,30 @@
             margin-bottom: 24px;
         }
 
+        /* STATUS INDICATORS */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: rgba(0, 200, 83, 0.1);
+            color: var(--success);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
-            .suggestions-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .quick-add-card {
+            .simple-add-card {
                 padding: 20px;
             }
         }
@@ -846,7 +919,7 @@
             <div class="app-brand">
                 <div class="logo">⚡</div>
                 <div class="app-title">Fluxio</div>
-                <div class="app-subtitle">Ajoutez des amis en un clic</div>
+                <div class="app-subtitle">Ajouter des amis facilement</div>
             </div>
             
             <div class="auth-tabs">
@@ -880,13 +953,13 @@
                 </div>
             </div>
             <div class="header-right">
-                <button class="icon-btn" onclick="showAddFriendModal()">👥</button>
-                <button class="icon-btn" onclick="showModal('settings')">⚙</button>
+                <button class="icon-btn" onclick="showMyQR()">👤</button>
+                <button class="icon-btn" onclick="showAddFriendModal()">➕</button>
             </div>
         </div>
 
         <!-- ADD FRIEND FLOATING BUTTON -->
-        <button class="add-friend-btn pulse" onclick="showAddFriendModal()">
+        <button class="add-friend-btn" onclick="showAddFriendModal()">
             +
         </button>
 
@@ -910,16 +983,14 @@
             <!-- CONTACTS VIEW -->
             <div id="contacts-view" class="hidden">
                 <div class="contacts-section">
-                    <h3 class="section-title">Mes amis</h3>
+                    <div class="section-title">
+                        <div class="section-title-text">Mes amis</div>
+                        <button class="show-qr-btn" onclick="showMyQR()">
+                            Mon QR Code
+                        </button>
+                    </div>
                     <div class="contacts-list" id="friends-list">
                         <!-- Friends loaded here -->
-                    </div>
-                </div>
-                
-                <div class="contacts-section">
-                    <h3 class="section-title">Suggestions</h3>
-                    <div class="suggestions-grid" id="suggestions-list">
-                        <!-- Suggestions loaded here -->
                     </div>
                 </div>
             </div>
@@ -938,7 +1009,9 @@
                 <div class="avatar" id="user-avatar">U</div>
                 <div class="profile-text">
                     <div class="profile-name" id="user-name">Utilisateur</div>
-                    <div class="profile-status" id="user-status">🟢 En ligne</div>
+                    <div class="profile-status" id="user-status">
+                        <span class="status-badge">En ligne</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -952,10 +1025,6 @@
                 <span class="nav-icon">👥</span>
                 Amis
             </button>
-            <button class="nav-btn" onclick="showModal('settings')">
-                <span class="nav-icon">⚙</span>
-                Paramètres
-            </button>
             <button class="nav-btn" onclick="showAddFriendModal()">
                 <span class="nav-icon">➕</span>
                 Ajouter un ami
@@ -963,94 +1032,63 @@
         </div>
     </div>
 
-    <!-- QUICK ADD MODAL -->
-    <div class="quick-add-modal" id="add-friend-modal">
-        <div class="quick-add-card">
-            <h2 class="quick-add-title">Ajouter un ami</h2>
-            <p class="quick-add-subtitle">Choisissez une méthode</p>
+    <!-- SIMPLE ADD MODAL -->
+    <div class="simple-add-modal" id="add-friend-modal">
+        <div class="simple-add-card">
+            <h2 class="simple-add-title">Ajouter un ami</h2>
+            <p class="simple-add-subtitle">Choisissez une méthode</p>
             
-            <div class="add-methods">
-                <button class="method-btn" onclick="searchByUsername()">
-                    <div class="method-icon">🔍</div>
-                    <div class="method-text">
-                        Rechercher par nom
-                        <div class="method-desc">Trouvez des amis par leur nom d'utilisateur</div>
-                    </div>
-                </button>
+            <div class="choices-grid">
+                <div class="choice-card" id="qr-choice" onclick="selectChoice('qr')">
+                    <div class="choice-icon">📱</div>
+                    <div class="choice-title">Scanner QR Code</div>
+                    <div class="choice-desc">Scannez le code QR d'un ami</div>
+                </div>
                 
-                <button class="method-btn" onclick="showQRScanner()">
-                    <div class="method-icon">📱</div>
-                    <div class="method-text">
-                        Scanner QR Code
-                        <div class="method-desc">Scannez le code d'un ami</div>
-                    </div>
-                </button>
-                
-                <button class="method-btn" onclick="showPhoneContacts()">
-                    <div class="method-icon">📞</div>
-                    <div class="method-text">
-                        Contacts téléphone
-                        <div class="method-desc">Trouvez des amis dans vos contacts</div>
-                    </div>
-                </button>
-                
-                <button class="method-btn" onclick="importFromSocial()">
-                    <div class="method-icon">🌐</div>
-                    <div class="method-text">
-                        Réseaux sociaux
-                        <div class="method-desc">Importez depuis vos réseaux</div>
-                    </div>
-                </button>
-                
-                <button class="method-btn" onclick="showFriendSuggestions()">
-                    <div class="method-icon">🤝</div>
-                    <div class="method-text">
-                        Suggestions
-                        <div class="method-desc">Personnes que vous pourriez connaître</div>
-                    </div>
-                </button>
-            </div>
-            
-            <button class="btn" style="margin-top: 24px;" onclick="hideAddFriendModal()">
-                Annuler
-            </button>
-        </div>
-    </div>
-
-    <!-- SEARCH MODAL -->
-    <div class="quick-add-modal" id="search-modal">
-        <div class="quick-add-card">
-            <h2 class="quick-add-title">Rechercher un ami</h2>
-            
-            <div style="margin-bottom: 24px;">
-                <input type="text" 
-                       class="input" 
-                       id="username-search"
-                       placeholder="Nom d'utilisateur ou email"
-                       style="margin-bottom: 16px;">
-                
-                <div id="search-results">
-                    <!-- Results appear here -->
+                <div class="choice-card" id="email-choice" onclick="selectChoice('email')">
+                    <div class="choice-icon">✉️</div>
+                    <div class="choice-title">Ajouter par email</div>
+                    <div class="choice-desc">Entrez l'email de votre ami</div>
                 </div>
             </div>
-            
-            <div style="display: flex; gap: 12px;">
-                <button class="btn" style="flex: 1; background: var(--bg-high);" onclick="hideSearchModal()">
+
+            <!-- EMAIL FORM (hidden by default) -->
+            <div id="email-form-container" class="hidden">
+                <div class="email-form">
+                    <div class="email-input-group">
+                        <input type="email" 
+                               class="email-input" 
+                               id="friend-email"
+                               placeholder="Email de votre ami"
+                               required>
+                        <button class="send-btn" onclick="addByEmail()" id="send-email-btn">
+                            ↑
+                        </button>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-secondary); text-align: center;">
+                        Un lien d'invitation sera envoyé à cet email
+                    </p>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div id="action-buttons">
+                <button class="btn" style="margin-top: 16px;" onclick="hideAddFriendModal()">
                     Annuler
                 </button>
-                <button class="btn" style="flex: 1;" onclick="performSearch()">
-                    Rechercher
+                <button class="btn" style="margin-top: 12px;" onclick="continueWithChoice()" id="continue-btn">
+                    Continuer
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- QR SCANNER -->
+    <!-- QR CODE SCANNER -->
     <div class="qr-scanner" id="qr-scanner">
         <div class="scanner-header">
             <div style="font-size: 18px; font-weight: 600;">Scanner QR Code</div>
             <div style="font-size: 14px; color: var(--text-secondary); margin-top: 4px;">
-                Pointez la caméra vers le code
+                Pointez la caméra vers le code QR de votre ami
             </div>
         </div>
         
@@ -1067,23 +1105,29 @@
         </div>
     </div>
 
-    <!-- FRIEND REQUEST MODAL -->
-    <div class="quick-add-modal" id="friend-request-modal">
-        <div class="quick-add-card">
-            <div style="text-align: center; margin-bottom: 24px;">
-                <div class="avatar" id="request-avatar" style="width: 80px; height: 80px; margin: 0 auto 20px;">J</div>
-                <h2 class="quick-add-title" id="request-name">Jean Dupont</h2>
-                <p class="quick-add-subtitle" id="request-mutual">5 amis en commun</p>
+    <!-- MY QR CODE MODAL -->
+    <div class="my-qr-modal" id="my-qr-modal">
+        <div class="my-qr-card">
+            <div class="user-info">
+                <div class="user-name" id="qr-user-name">Utilisateur</div>
+                <div class="user-email" id="qr-user-email">email@exemple.com</div>
             </div>
             
-            <div style="display: flex; gap: 12px;">
-                <button class="btn" style="flex: 1; background: var(--bg-high);" onclick="declineRequest()">
-                    Refuser
-                </button>
-                <button class="btn" style="flex: 1;" onclick="acceptRequest()">
-                    Accepter
-                </button>
+            <div class="qr-code-container" id="qr-code-display">
+                <!-- QR Code would be generated here -->
+                <div style="font-size: 14px; color: #666;">
+                    QR Code de<br>
+                    <span id="qr-code-content">fluxio:user@123</span>
+                </div>
             </div>
+            
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;">
+                Partagez ce code avec vos amis pour qu'ils puissent vous ajouter
+            </p>
+            
+            <button class="btn" onclick="hideMyQR()">
+                Fermer
+            </button>
         </div>
     </div>
 
@@ -1093,22 +1137,13 @@
             // State
             user: null,
             friends: new Map(),
-            friendRequests: new Map(),
-            pendingRequests: new Map(),
-            suggestions: new Map(),
-            chats: new Map(),
-            currentView: 'chats',
+            selectedChoice: null,
             
             // Initialize
             init() {
                 this.setupEventListeners();
                 this.loadData();
                 this.checkAuth();
-                
-                // Generate demo data if empty
-                if (this.friends.size === 0) {
-                    this.generateDemoSuggestions();
-                }
             },
             
             // Authentication
@@ -1130,7 +1165,6 @@
             },
             
             login(email, password) {
-                // Simulate authentication
                 const users = JSON.parse(localStorage.getItem('fluxio_users') || '[]');
                 const user = users.find(u => u.email === email && u.password === password);
                 
@@ -1158,15 +1192,19 @@
                     return false;
                 }
                 
+                // Generate QR code data
+                const userId = 'user_' + Date.now();
+                const qrData = `fluxio:${userId}:${email}`;
+                
                 const user = {
-                    id: 'u' + Date.now(),
+                    id: userId,
                     name,
                     email,
                     password,
                     avatarColor: this.getRandomColor(),
+                    qrCode: qrData,
                     createdAt: Date.now(),
-                    friends: [],
-                    friendRequests: []
+                    friends: []
                 };
                 
                 users.push(user);
@@ -1186,20 +1224,13 @@
             // Data Management
             loadData() {
                 try {
-                    // Load friends
-                    const savedFriends = localStorage.getItem(`fluxio_friends_${this.user?.id}`);
-                    if (savedFriends) {
-                        JSON.parse(savedFriends).forEach(f => {
-                            this.friends.set(f.id, f);
-                        });
-                    }
-                    
-                    // Load suggestions
-                    const savedSuggestions = localStorage.getItem('fluxio_suggestions');
-                    if (savedSuggestions) {
-                        JSON.parse(savedSuggestions).forEach(s => {
-                            this.suggestions.set(s.id, s);
-                        });
+                    if (this.user) {
+                        const savedFriends = localStorage.getItem(`fluxio_friends_${this.user.id}`);
+                        if (savedFriends) {
+                            JSON.parse(savedFriends).forEach(f => {
+                                this.friends.set(f.id, f);
+                            });
+                        }
                     }
                 } catch (e) {
                     console.log('Erreur chargement données');
@@ -1211,14 +1242,121 @@
                     if (this.user) {
                         localStorage.setItem(`fluxio_friends_${this.user.id}`, 
                             JSON.stringify(Array.from(this.friends.values())));
-                        localStorage.setItem('fluxio_suggestions',
-                            JSON.stringify(Array.from(this.suggestions.values())));
                         localStorage.setItem(`fluxio_user_${this.user.id}`, 
                             JSON.stringify(this.user));
                     }
                 } catch (e) {
                     console.log('Erreur sauvegarde');
                 }
+            },
+            
+            // Friend Management
+            addFriendByEmail(email) {
+                if (!email || !this.validateEmail(email)) {
+                    this.showNotification('Email invalide', 'error');
+                    return false;
+                }
+                
+                // Check if already friends
+                const existingFriend = Array.from(this.friends.values()).find(f => f.email === email);
+                if (existingFriend) {
+                    this.showNotification('Déjà ami avec cette personne', 'error');
+                    return false;
+                }
+                
+                // Check if it's yourself
+                if (email === this.user.email) {
+                    this.showNotification('Vous ne pouvez pas vous ajouter vous-même', 'error');
+                    return false;
+                }
+                
+                // Simulate sending invitation
+                this.showNotification(`Invitation envoyée à ${email}`);
+                
+                // Simulate finding user in database
+                setTimeout(() => {
+                    const users = JSON.parse(localStorage.getItem('fluxio_users') || '[]');
+                    const foundUser = users.find(u => u.email === email);
+                    
+                    if (foundUser) {
+                        // User exists - add as friend
+                        this.addFoundFriend(foundUser);
+                    } else {
+                        // User doesn't exist - show invitation sent message
+                        this.showNotification(`${email} recevra une invitation`);
+                    }
+                }, 1000);
+                
+                return true;
+            },
+            
+            addFoundFriend(friendData) {
+                const friend = {
+                    id: friendData.id,
+                    name: friendData.name,
+                    email: friendData.email,
+                    avatarColor: friendData.avatarColor || this.getRandomColor(),
+                    addedAt: Date.now()
+                };
+                
+                this.friends.set(friend.id, friend);
+                this.saveData();
+                this.loadFriends();
+                
+                this.showNotification(`${friend.name} ajouté à vos amis`);
+                this.hideAddFriendModal();
+            },
+            
+            addFriendByQR(qrData) {
+                try {
+                    // Parse QR data format: fluxio:user_id:email
+                    const parts = qrData.split(':');
+                    if (parts[0] !== 'fluxio' || parts.length < 3) {
+                        this.showNotification('QR Code invalide', 'error');
+                        return false;
+                    }
+                    
+                    const userId = parts[1];
+                    const email = parts[2];
+                    
+                    // Check if already friends
+                    if (this.friends.has(userId)) {
+                        this.showNotification('Déjà ami avec cette personne', 'error');
+                        return false;
+                    }
+                    
+                    // Check if it's yourself
+                    if (userId === this.user.id) {
+                        this.showNotification('Vous ne pouvez pas vous ajouter vous-même', 'error');
+                        return false;
+                    }
+                    
+                    // Find user in database
+                    const users = JSON.parse(localStorage.getItem('fluxio_users') || '[]');
+                    const foundUser = users.find(u => u.id === userId);
+                    
+                    if (foundUser) {
+                        this.addFoundFriend(foundUser);
+                        return true;
+                    } else {
+                        this.showNotification('Utilisateur non trouvé', 'error');
+                        return false;
+                    }
+                } catch (e) {
+                    this.showNotification('QR Code invalide', 'error');
+                    return false;
+                }
+            },
+            
+            // Helper Methods
+            validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            },
+            
+            getRandomColor() {
+                const colors = ['#0066FF', '#FF3366', '#00C853', '#FFAA00', '#9966FF'];
+                return colors[Math.floor(Math.random() * colors.length)];
             },
             
             // UI Methods
@@ -1235,7 +1373,6 @@
                     $('#app').style.display = 'flex';
                     this.updateUserInfo();
                     this.loadFriends();
-                    this.loadSuggestions();
                     this.showNotification('Bienvenue sur Fluxio');
                 }, 500);
             },
@@ -1246,107 +1383,13 @@
                 $('#user-name').textContent = this.user.name;
                 $('#user-avatar').textContent = this.user.name.charAt(0).toUpperCase();
                 $('#user-avatar').style.background = this.user.avatarColor;
+                
+                // Update QR modal
+                $('#qr-user-name').textContent = this.user.name;
+                $('#qr-user-email').textContent = this.user.email;
+                $('#qr-code-content').textContent = this.user.qrCode || `fluxio:${this.user.id}:${this.user.email}`;
             },
             
-            // Friend Management - SIMPLIFIED
-            async searchFriend(query) {
-                if (!query.trim()) {
-                    this.showNotification('Entrez un nom', 'error');
-                    return;
-                }
-                
-                // Show loading
-                const resultsDiv = $('#search-results');
-                resultsDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">Recherche en cours...</div>';
-                
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 800));
-                
-                // Generate mock results
-                const mockResults = this.generateMockResults(query);
-                
-                if (mockResults.length === 0) {
-                    resultsDiv.innerHTML = `
-                        <div style="text-align: center; padding: 20px;">
-                            <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;">👤</div>
-                            <div style="color: var(--text-secondary);">Aucun résultat trouvé</div>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Display results
-                resultsDiv.innerHTML = mockResults.map(user => `
-                    <div class="contact-item" style="margin-bottom: 12px;">
-                        <div class="contact-avatar" style="background: ${user.color}">
-                            ${user.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div class="contact-info">
-                            <div class="contact-name">${user.name}</div>
-                            <div class="contact-mutual">${user.mutualFriends} amis en commun</div>
-                        </div>
-                        <button class="add-btn action-btn" onclick="App.sendFriendRequest('${user.id}')">
-                            +
-                        </button>
-                    </div>
-                `).join('');
-            },
-            
-            sendFriendRequest(friendId) {
-                const friend = this.suggestions.get(friendId) || this.generateMockUser(friendId);
-                
-                if (!friend) {
-                    this.showNotification('Utilisateur non trouvé', 'error');
-                    return;
-                }
-                
-                // Add to pending requests
-                this.pendingRequests.set(friendId, {
-                    ...friend,
-                    timestamp: Date.now(),
-                    status: 'pending'
-                });
-                
-                this.showNotification(`Demande envoyée à ${friend.name}`);
-                this.hideSearchModal();
-                
-                // Simulate auto-accept for demo
-                setTimeout(() => {
-                    this.acceptFriendRequest(friendId);
-                }, 2000 + Math.random() * 3000);
-            },
-            
-            acceptFriendRequest(friendId) {
-                const request = this.pendingRequests.get(friendId);
-                if (!request) return;
-                
-                // Add to friends
-                this.friends.set(friendId, {
-                    ...request,
-                    status: 'accepted',
-                    friendsSince: Date.now()
-                });
-                
-                // Remove from suggestions and pending
-                this.suggestions.delete(friendId);
-                this.pendingRequests.delete(friendId);
-                
-                this.showNotification(`${request.name} est maintenant votre ami`);
-                this.loadFriends();
-                this.loadSuggestions();
-                this.saveData();
-            },
-            
-            declineFriendRequest(friendId) {
-                const request = this.pendingRequests.get(friendId);
-                if (!request) return;
-                
-                this.pendingRequests.delete(friendId);
-                this.showNotification(`Demande refusée`);
-                this.hideFriendRequestModal();
-            },
-            
-            // UI Rendering
             loadFriends() {
                 const container = $('#friends-list');
                 
@@ -1354,7 +1397,13 @@
                     container.innerHTML = `
                         <div style="text-align: center; padding: 40px 20px;">
                             <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;">👥</div>
-                            <div style="color: var(--text-secondary);">Ajoutez votre premier ami</div>
+                            <div style="color: var(--text-secondary); margin-bottom: 16px;">
+                                Vous n'avez pas encore d'amis
+                            </div>
+                            <button class="btn" onclick="showAddFriendModal()" 
+                                    style="width: auto; padding: 12px 24px; font-size: 14px;">
+                                Ajouter un ami
+                            </button>
                         </div>
                     `;
                     return;
@@ -1362,12 +1411,12 @@
                 
                 container.innerHTML = Array.from(this.friends.values()).map(friend => `
                     <div class="contact-item">
-                        <div class="contact-avatar" style="background: ${friend.color || friend.avatarColor}">
+                        <div class="contact-avatar" style="background: ${friend.avatarColor}">
                             ${friend.name.charAt(0).toUpperCase()}
                         </div>
                         <div class="contact-info">
                             <div class="contact-name">${friend.name}</div>
-                            <div class="contact-mutual">Ami depuis ${this.formatTime(friend.friendsSince)}</div>
+                            <div class="contact-email">${friend.email}</div>
                         </div>
                         <div class="contact-actions">
                             <button class="chat-btn action-btn" onclick="App.startChat('${friend.id}')">
@@ -1378,135 +1427,13 @@
                 `).join('');
             },
             
-            loadSuggestions() {
-                const container = $('#suggestions-list');
-                
-                if (this.suggestions.size === 0) {
-                    container.innerHTML = `
-                        <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px;">
-                            <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;">🤝</div>
-                            <div style="color: var(--text-secondary);">Aucune suggestion pour le moment</div>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                container.innerHTML = Array.from(this.suggestions.values()).map(suggestion => `
-                    <div class="suggestion-card" onclick="App.showFriendRequest('${suggestion.id}')">
-                        <div class="suggestion-avatar" style="background: ${suggestion.color}">
-                            ${suggestion.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div class="suggestion-name">${suggestion.name}</div>
-                        <div class="suggestion-mutual">${suggestion.mutualFriends} amis en commun</div>
-                        <button class="suggestion-add-btn" onclick="event.stopPropagation(); App.sendFriendRequest('${suggestion.id}')">
-                            Ajouter
-                        </button>
-                    </div>
-                `).join('');
-            },
-            
-            // Helper Methods
-            formatTime(timestamp) {
-                const now = Date.now();
-                const diff = now - timestamp;
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                
-                if (days === 0) return "aujourd'hui";
-                if (days === 1) return "hier";
-                if (days < 7) return `il y a ${days} jours`;
-                if (days < 30) return `il y a ${Math.floor(days/7)} semaines`;
-                return `il y a ${Math.floor(days/30)} mois`;
-            },
-            
-            getRandomColor() {
-                const colors = ['#0066FF', '#FF3366', '#00C853', '#FFAA00', '#9966FF'];
-                return colors[Math.floor(Math.random() * colors.length)];
-            },
-            
-            // Demo Data Generation
-            generateDemoSuggestions() {
-                const names = [
-                    'Jean Dupont', 'Marie Martin', 'Pierre Bernard', 'Sophie Petit',
-                    'Thomas Richard', 'Julie Dubois', 'Michelle Robert', 'David Moreau',
-                    'Emma Simon', 'Paul Laurent', 'Chloé Michel', 'Lucas Lefebvre'
-                ];
-                
-                names.forEach((name, index) => {
-                    const suggestion = {
-                        id: 's' + index,
-                        name: name,
-                        color: this.getRandomColor(),
-                        mutualFriends: Math.floor(Math.random() * 10) + 1,
-                        interests: ['Sport', 'Musique', 'Voyage', 'Cinéma', 'Technologie'][Math.floor(Math.random() * 5)],
-                        location: ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Bordeaux'][Math.floor(Math.random() * 5)]
-                    };
-                    this.suggestions.set(suggestion.id, suggestion);
-                });
-                
-                this.saveData();
-            },
-            
-            generateMockResults(query) {
-                const mockUsers = [];
-                const nameParts = query.toLowerCase().split(' ');
-                
-                // Check suggestions first
-                this.suggestions.forEach(user => {
-                    if (user.name.toLowerCase().includes(query.toLowerCase())) {
-                        mockUsers.push(user);
-                    }
-                });
-                
-                // Add some random mock users if needed
-                if (mockUsers.length < 3) {
-                    const extraNames = ['Alexandre', 'Camille', 'Nicolas', 'Sarah', 'Kevin', 'Laura'];
-                    extraNames.forEach((name, i) => {
-                        if (mockUsers.length < 5) {
-                            mockUsers.push({
-                                id: 'mock' + i,
-                                name: name + ' ' + ['Durand', 'Lemoine', 'Garcia', 'Fournier'][i % 4],
-                                color: this.getRandomColor(),
-                                mutualFriends: Math.floor(Math.random() * 8),
-                                interests: ['Art', 'Lecture', 'Cuisine', 'Photographie'][i % 4]
-                            });
-                        }
-                    });
-                }
-                
-                return mockUsers;
-            },
-            
-            generateMockUser(id) {
-                const names = ['Alexandre', 'Camille', 'Nicolas', 'Sarah', 'Kevin', 'Laura'];
-                return {
-                    id,
-                    name: names[Math.floor(Math.random() * names.length)] + ' ' + ['Durand', 'Lemoine', 'Garcia'][Math.floor(Math.random() * 3)],
-                    color: this.getRandomColor(),
-                    mutualFriends: Math.floor(Math.random() * 6) + 1
-                };
-            },
-            
-            // UI Controls
-            showFriendRequest(friendId) {
-                const friend = this.suggestions.get(friendId) || this.generateMockUser(friendId);
-                if (!friend) return;
-                
-                $('#request-name').textContent = friend.name;
-                $('#request-avatar').textContent = friend.name.charAt(0).toUpperCase();
-                $('#request-avatar').style.background = friend.color;
-                $('#request-mutual').textContent = `${friend.mutualFriends} amis en commun`;
-                
-                // Store current friend ID
-                $('#friend-request-modal').dataset.friendId = friendId;
-                showModal('friend-request');
-            },
-            
             startChat(friendId) {
                 const friend = this.friends.get(friendId);
                 if (!friend) return;
                 
                 this.showNotification(`Discussion démarrée avec ${friend.name}`);
                 // In a real app, this would open a chat window
+                showChats(); // Go back to chats view
             },
             
             showNotification(message, type = '') {
@@ -1527,6 +1454,27 @@
             vibrate() {
                 if (navigator.vibrate) {
                     navigator.vibrate(30);
+                }
+            },
+            
+            // Choice Selection
+            selectChoice(choice) {
+                this.selectedChoice = choice;
+                
+                // Update UI
+                document.querySelectorAll('.choice-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                $(`${choice}-choice`).classList.add('selected');
+                
+                // Show appropriate form
+                if (choice === 'email') {
+                    $('#email-form-container').classList.remove('hidden');
+                    $('#continue-btn').classList.add('hidden');
+                    $('#friend-email').focus();
+                } else {
+                    $('#email-form-container').classList.add('hidden');
+                    $('#continue-btn').classList.remove('hidden');
                 }
             },
             
@@ -1560,10 +1508,11 @@
                     });
                 });
                 
-                // Search input
-                $('#username-search').addEventListener('keypress', (e) => {
+                // Email input
+                $('#friend-email').addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
-                        this.performSearch();
+                        e.preventDefault();
+                        addByEmail();
                     }
                 });
             }
@@ -1582,103 +1531,96 @@
             $('#sidebar').classList.toggle('open');
         };
 
+        // Add Friend Modal
+        let selectedChoice = null;
+
         window.showAddFriendModal = function() {
+            selectedChoice = null;
             $('#add-friend-modal').classList.add('active');
+            resetChoices();
         };
 
         window.hideAddFriendModal = function() {
             $('#add-friend-modal').classList.remove('active');
+            selectedChoice = null;
+            resetChoices();
         };
 
-        window.showSearchModal = function() {
-            hideAddFriendModal();
-            $('#search-modal').classList.add('active');
-            $('#username-search').focus();
+        window.selectChoice = function(choice) {
+            selectedChoice = choice;
+            App.selectChoice(choice);
         };
 
-        window.hideSearchModal = function() {
-            $('#search-modal').classList.remove('active');
+        window.continueWithChoice = function() {
+            if (!selectedChoice) {
+                App.showNotification('Choisissez une méthode', 'error');
+                return;
+            }
+            
+            if (selectedChoice === 'qr') {
+                hideAddFriendModal();
+                showQRScanner();
+            }
         };
 
-        window.performSearch = function() {
-            const query = $('#username-search').value.trim();
-            App.searchFriend(query);
+        window.addByEmail = function() {
+            const email = $('#friend-email').value.trim();
+            if (App.addFriendByEmail(email)) {
+                $('#friend-email').value = '';
+            }
         };
 
+        function resetChoices() {
+            document.querySelectorAll('.choice-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            $('#email-form-container').classList.add('hidden');
+            $('#continue-btn').classList.remove('hidden');
+            $('#friend-email').value = '';
+        }
+
+        // QR Scanner
         window.showQRScanner = function() {
-            hideAddFriendModal();
             $('#qr-scanner').classList.add('active');
             
             // Simulate QR scanning
             setTimeout(() => {
+                // Generate mock QR data
+                const mockUsers = [
+                    { id: 'user_123', email: 'jean@exemple.com', name: 'Jean Dupont' },
+                    { id: 'user_456', email: 'marie@exemple.com', name: 'Marie Martin' },
+                    { id: 'user_789', email: 'pierre@exemple.com', name: 'Pierre Bernard' }
+                ];
+                
+                const randomUser = mockUsers[Math.floor(Math.random() * mockUsers.length)];
+                const qrData = `fluxio:${randomUser.id}:${randomUser.email}`;
+                
                 hideQRScanner();
-                App.showNotification('QR Code scanné avec succès');
-                App.sendFriendRequest('qr' + Date.now());
-            }, 1500);
+                App.addFriendByQR(qrData);
+            }, 2000);
         };
 
         window.hideQRScanner = function() {
             $('#qr-scanner').classList.remove('active');
         };
 
-        window.showPhoneContacts = function() {
-            hideAddFriendModal();
-            App.showNotification('Importation des contacts...');
+        // My QR Code
+        window.showMyQR = function() {
+            if (!App.user) return;
             
-            // Simulate contact import
-            setTimeout(() => {
-                App.showNotification('3 amis trouvés dans vos contacts');
-                // Add mock friends from contacts
-                for (let i = 0; i < 3; i++) {
-                    App.sendFriendRequest('contact' + i);
-                }
-            }, 1000);
-        };
-
-        window.importFromSocial = function() {
-            hideAddFriendModal();
-            App.showNotification('Connexion aux réseaux sociaux...');
+            // Update QR content
+            const qrData = App.user.qrCode || `fluxio:${App.user.id}:${App.user.email}`;
+            $('#qr-code-content').textContent = qrData;
             
-            setTimeout(() => {
-                App.showNotification('5 amis importés depuis vos réseaux');
-                for (let i = 0; i < 5; i++) {
-                    App.sendFriendRequest('social' + i);
-                }
-            }, 1000);
+            $('#my-qr-modal').classList.add('active');
         };
 
-        window.showFriendSuggestions = function() {
-            hideAddFriendModal();
-            showContacts();
-            App.showNotification('Suggestions d\'amis chargées');
+        window.hideMyQR = function() {
+            $('#my-qr-modal').classList.remove('active');
         };
 
-        window.showModal = function(modalId) {
-            $(`${modalId}-modal`).classList.add('active');
-        };
-
-        window.hideModal = function(modalId) {
-            $(`${modalId}-modal`).classList.remove('active');
-        };
-
-        window.acceptRequest = function() {
-            const friendId = $('#friend-request-modal').dataset.friendId;
-            if (friendId) {
-                App.acceptFriendRequest(friendId);
-            }
-            hideModal('friend-request');
-        };
-
-        window.declineRequest = function() {
-            const friendId = $('#friend-request-modal').dataset.friendId;
-            if (friendId) {
-                App.declineFriendRequest(friendId);
-            }
-            hideModal('friend-request');
-        };
-
+        // Navigation
         window.showChats = function() {
-            App.currentView = 'chats';
             $('#current-view').textContent = 'Messages';
             $('#contacts-view').classList.add('hidden');
             $('#empty-state').classList.add('hidden');
@@ -1687,19 +1629,12 @@
         };
 
         window.showContacts = function() {
-            App.currentView = 'contacts';
             $('#current-view').textContent = 'Amis';
             $('#chats-container').classList.add('hidden');
             $('#empty-state').classList.add('hidden');
             $('#contacts-view').classList.remove('hidden');
             App.loadFriends();
-            App.loadSuggestions();
             toggleSidebar();
-        };
-
-        window.searchByUsername = function() {
-            hideAddFriendModal();
-            showSearchModal();
         };
 
         // Expose App globally
